@@ -236,6 +236,38 @@ public sealed class PostgresDatabaseInitializer(NpgsqlDataSource dataSource) : I
             command.Parameters.Add(new NpgsqlParameter("longitud", NpgsqlDbType.Double) { Value = (object?)point.Longitude ?? DBNull.Value });
             await command.ExecuteNonQueryAsync(ct).ConfigureAwait(false);
         }
+
+        // Sincronizar reportes ciudadanos existentes que aún no figuren en puntos críticos.
+        await using (var syncCommand = new NpgsqlCommand("""
+            INSERT INTO puntos_criticos
+                (id_punto, id_tipo_fuente, nombre, area, id_distrito, distrito_heredado, sector, nivel_db,
+                 etiqueta_fuente, descripcion, franja_horaria, x, y, limite_referencia, ilustrativo, latitud, longitud)
+            SELECT
+                r.id_reporte,
+                r.id_tipo_fuente,
+                COALESCE(r.ubicacion_heredada, 'Reporte ciudadano'),
+                'Huancayo',
+                (SELECT id_distrito FROM distritos WHERE ubigeo = '120101' LIMIT 1),
+                NULL,
+                'Reporte ciudadano',
+                COALESCE(r.nivel_estimado_db, 70.0),
+                f.nombre_fuente,
+                r.descripcion,
+                'Reporte registrado',
+                50.0,
+                50.0,
+                70.0,
+                FALSE,
+                NULL,
+                NULL
+            FROM reportes_ciudadanos r
+            JOIN tipos_fuente_ruido f USING (id_tipo_fuente)
+            WHERE NOT EXISTS (SELECT 1 FROM puntos_criticos p WHERE p.id_punto = r.id_reporte)
+            ON CONFLICT (id_punto) DO NOTHING;
+            """, connection, transaction))
+        {
+            await syncCommand.ExecuteNonQueryAsync(ct).ConfigureAwait(false);
+        }
     }
 
     private static async Task<HashSet<string>> CurrentTablesAsync(NpgsqlConnection connection, NpgsqlTransaction transaction, CancellationToken ct)

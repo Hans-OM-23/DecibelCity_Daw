@@ -12,7 +12,7 @@
       <h2>Gracias por hacerte escuchar.</h2>
       <p>Tu aporte se registró correctamente. Cada reporte nos ayuda a conocer mejor el entorno sonoro de Huancayo.</p>
       <dl><div><dt>Ubicación</dt><dd>{{ report.location }}</dd></div><div><dt>Código de reporte</dt><dd class="receipt-id">{{ report.id }}</dd></div><div><dt>Fecha de registro</dt><dd>{{ report.created_at | date:'dd/MM/yyyy, HH:mm' }}</dd></div><div><dt>Nivel aproximado</dt><dd>{{ report.decibels === null ? 'No indicado' : report.decibels + ' dBA' }}</dd></div></dl>
-      <p class="receipt-explanation">Los reportes ciudadanos se almacenan por separado de los puntos ilustrativos del mapa. Este registro no constituye una denuncia ante una autoridad.</p>
+      <p class="receipt-explanation">Tu reporte ciudadano se ha incorporado al apartado de puntos críticos y al mapa. Este registro no constituye una denuncia ante una autoridad.</p>
       <div class="receipt-actions"><button class="button button-primary" type="button" (click)="newReport()"><app-icon name="plus" /> Crear otro reporte</button><a class="button button-secondary" routerLink="/puntos-criticos">Explorar el mapa <app-icon name="arrow-right" /></a></div>
     </div>
   } @else {

@@ -14,7 +14,7 @@ public sealed class PostgresNoiseRepository(NpgsqlDataSource dataSource) : INois
                p.limite_referencia, p.ilustrativo, p.latitud, p.longitud
         FROM puntos_criticos p JOIN tipos_fuente_ruido f USING (id_tipo_fuente)
         LEFT JOIN distritos d USING (id_distrito)
-        ORDER BY p.id_punto
+        ORDER BY p.ilustrativo DESC, p.id_punto ASC
         """;
 
     /// <inheritdoc />
@@ -65,20 +65,72 @@ public sealed class PostgresNoiseRepository(NpgsqlDataSource dataSource) : INois
     public async Task SaveReportAsync(NoiseReport report, CancellationToken cancellationToken = default)
     {
         ArgumentNullException.ThrowIfNull(report);
+        await using var connection = await dataSource.OpenConnectionAsync(cancellationToken).ConfigureAwait(false);
+        await using var transaction = await connection.BeginTransactionAsync(cancellationToken).ConfigureAwait(false);
+
         // Sin columnas de cuenta: el reporte almacenado no se relaciona con la persona que lo envió.
-        await using var command = dataSource.CreateCommand("""
+        await using (var command = new NpgsqlCommand("""
             INSERT INTO reportes_ciudadanos
                 (id_reporte, id_tipo_fuente, descripcion, nivel_estimado_db, fecha_hora, id_estado, id_lugar, proveedor_lugar)
             VALUES (@id, (SELECT id_tipo_fuente FROM tipos_fuente_ruido WHERE codigo = @fuente), @descripcion, @nivel,
                     @fecha, (SELECT id_estado FROM estados_reporte WHERE codigo_estado = @estado), @lugar, 'osm')
-            """);
-        command.Parameters.AddWithValue("id", report.Id);
-        command.Parameters.AddWithValue("fuente", report.Source);
-        command.Parameters.AddWithValue("descripcion", report.Description);
-        command.Parameters.Add(new NpgsqlParameter("nivel", NpgsqlDbType.Double) { Value = (object?)report.Decibels ?? DBNull.Value });
-        command.Parameters.Add(new NpgsqlParameter("fecha", NpgsqlDbType.TimestampTz) { Value = report.CreatedAt.ToUniversalTime() });
-        command.Parameters.AddWithValue("estado", report.Status);
-        command.Parameters.AddWithValue("lugar", report.PlaceId);
-        await command.ExecuteNonQueryAsync(cancellationToken).ConfigureAwait(false);
+            """, connection, transaction))
+        {
+            command.Parameters.AddWithValue("id", report.Id);
+            command.Parameters.AddWithValue("fuente", report.Source);
+            command.Parameters.AddWithValue("descripcion", report.Description);
+            command.Parameters.Add(new NpgsqlParameter("nivel", NpgsqlDbType.Double) { Value = (object?)report.Decibels ?? DBNull.Value });
+            command.Parameters.Add(new NpgsqlParameter("fecha", NpgsqlDbType.TimestampTz) { Value = report.CreatedAt.ToUniversalTime() });
+            command.Parameters.AddWithValue("estado", report.Status);
+            command.Parameters.AddWithValue("lugar", report.PlaceId);
+            await command.ExecuteNonQueryAsync(cancellationToken).ConfigureAwait(false);
+        }
+
+        // Registrar en puntos_criticos para que el reporte sea visible en el mapa y en el listado cívico.
+        await using (var command = new NpgsqlCommand("""
+            INSERT INTO puntos_criticos
+                (id_punto, id_tipo_fuente, nombre, area, id_distrito, distrito_heredado,
+                 sector, nivel_db, etiqueta_fuente, descripcion, franja_horaria,
+                 x, y, limite_referencia, ilustrativo, latitud, longitud)
+            VALUES (@id,
+                    (SELECT id_tipo_fuente FROM tipos_fuente_ruido WHERE codigo = @fuente),
+                    @nombre,
+                    @area,
+                    COALESCE(
+                        (SELECT id_distrito FROM distritos
+                         WHERE @nombre ILIKE '%' || nombre_distrito || '%'
+                           AND id_provincia = (SELECT id_provincia FROM provincias WHERE ubigeo = '1201' LIMIT 1)
+                         LIMIT 1),
+                        (SELECT id_distrito FROM distritos WHERE ubigeo = '120101' LIMIT 1)
+                    ),
+                    NULL,
+                    @sector,
+                    @nivel,
+                    (SELECT nombre_fuente FROM tipos_fuente_ruido WHERE codigo = @fuente),
+                    @descripcion,
+                    @franja,
+                    50.0,
+                    50.0,
+                    70.0,
+                    FALSE,
+                    @latitud,
+                    @longitud)
+            ON CONFLICT (id_punto) DO NOTHING
+            """, connection, transaction))
+        {
+            command.Parameters.AddWithValue("id", report.Id);
+            command.Parameters.AddWithValue("fuente", report.Source);
+            command.Parameters.AddWithValue("nombre", report.Location);
+            command.Parameters.AddWithValue("area", "Huancayo");
+            command.Parameters.AddWithValue("sector", "Reporte ciudadano");
+            command.Parameters.AddWithValue("nivel", report.Decibels ?? 70.0);
+            command.Parameters.AddWithValue("descripcion", report.Description);
+            command.Parameters.AddWithValue("franja", $"Reportado {report.CreatedAt.ToLocalTime():dd/MM/yyyy HH:mm}");
+            command.Parameters.AddWithValue("latitud", report.Latitude);
+            command.Parameters.AddWithValue("longitud", report.Longitude);
+            await command.ExecuteNonQueryAsync(cancellationToken).ConfigureAwait(false);
+        }
+
+        await transaction.CommitAsync(cancellationToken).ConfigureAwait(false);
     }
 }

@@ -189,12 +189,14 @@ public sealed class InMemoryUserRepository : IUserRepository
 /// <summary>Repositorio de puntos y reportes en memoria.</summary>
 public sealed class InMemoryNoiseRepository : INoiseRepository
 {
+    private readonly List<Hotspot> _hotspots = [.. NoiseCatalog.DemoHotspots];
+
     /// <summary>Reportes guardados.</summary>
     public ConcurrentQueue<NoiseReport> Reports { get; } = new();
 
     /// <inheritdoc />
     public Task<IReadOnlyList<Hotspot>> ListHotspotsAsync(CancellationToken cancellationToken = default) =>
-        Task.FromResult(NoiseCatalog.DemoHotspots);
+        Task.FromResult<IReadOnlyList<Hotspot>>(_hotspots.AsReadOnly());
 
     /// <inheritdoc />
     public Task<IReadOnlyList<NoiseSourceOption>> ListSourcesAsync(CancellationToken cancellationToken = default) =>
@@ -204,6 +206,24 @@ public sealed class InMemoryNoiseRepository : INoiseRepository
     public Task SaveReportAsync(NoiseReport report, CancellationToken cancellationToken = default)
     {
         Reports.Enqueue(report);
+        var sourceLabel = NoiseCatalog.Sources.FirstOrDefault(s => s.Value == report.Source)?.Label ?? report.Source;
+        _hotspots.Add(new Hotspot(
+            Id: report.Id,
+            Name: report.Location,
+            Area: "Huancayo",
+            District: "Huancayo",
+            Sector: "Reporte ciudadano",
+            Decibels: report.Decibels ?? 70.0,
+            Source: report.Source,
+            SourceLabel: sourceLabel,
+            Description: report.Description,
+            TimeLabel: $"Reportado {report.CreatedAt.ToLocalTime():dd/MM/yyyy HH:mm}",
+            X: 50.0,
+            Y: 50.0,
+            ReferenceLimit: 70.0,
+            Illustrative: false,
+            Latitude: report.Latitude,
+            Longitude: report.Longitude));
         return Task.CompletedTask;
     }
 }

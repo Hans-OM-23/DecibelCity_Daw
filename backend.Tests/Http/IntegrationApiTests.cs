@@ -316,6 +316,15 @@ public sealed class ReportTelegramTests
         {
             Assert.DoesNotContain(profile.GetProperty(personal).GetString()!, text, StringComparison.Ordinal);
         }
+
+        var hotspotsResponse = await client.GetAsync("/api/hotspots", TestContext.Current.CancellationToken);
+        Assert.Equal(HttpStatusCode.OK, hotspotsResponse.StatusCode);
+        var hotspots = await hotspotsResponse.JsonAsync();
+        Assert.Equal(4, hotspots.GetArrayLength());
+        var newHotspot = hotspots.EnumerateArray().Last();
+        Assert.Equal(receipt.GetProperty("id").GetString(), newHotspot.GetProperty("id").GetString());
+        Assert.False(newHotspot.GetProperty("illustrative").GetBoolean());
+        Assert.Equal(receipt.GetProperty("location").GetString(), newHotspot.GetProperty("name").GetString());
     }
 
     [Fact]

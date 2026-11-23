@@ -29,7 +29,7 @@ export class HotspotsComponent {
   readonly mapPoints = computed<readonly MapPoint[]>(() => this.hotspots().map((point) => ({
     id: point.id,
     title: point.name,
-    label: `${point.decibels} dB · ejemplo`,
+    label: `${point.decibels} dB · ${point.illustrative ? 'ejemplo' : 'reporte'}`,
     position: point.latitude !== null && point.longitude !== null ? { lat: point.latitude, lng: point.longitude } : null,
   })));
 
@@ -60,5 +60,15 @@ export class HotspotsComponent {
   difference(point: Hotspot): string {
     const difference = point.decibels - point.reference_limit;
     return `${difference > 0 ? '+' : ''}${difference} dB sobre referencia`;
+  }
+
+  sourceIcon(source: string): string {
+    switch (source) {
+      case 'traffic': return 'bus';
+      case 'commerce': return 'megaphone';
+      case 'construction': return 'truck';
+      case 'entertainment': return 'radio';
+      default: return 'volume';
+    }
   }
 }

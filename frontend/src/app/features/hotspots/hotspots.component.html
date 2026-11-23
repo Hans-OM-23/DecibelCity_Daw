@@ -20,12 +20,12 @@
       </div>
       <app-map [points]="mapPoints()" [selectedId]="selectedId()" (pointSelected)="selectedId.set($event)" />
       <div class="map-caption">
-        <div class="map-legend"><span class="legend-label"><span class="status-dot"></span> Capa acústica ilustrativa</span><p>Posiciones aproximadas sobre cartografía de OpenStreetMap. Los niveles de ruido son datos de ejemplo.</p></div>
+        <div class="map-legend"><span class="legend-label"><span class="status-dot"></span> Capa acústica</span><p>Posiciones sobre cartografía de OpenStreetMap. Muestra puntos de referencia y reportes ciudadanos.</p></div>
         <span class="map-area"><app-icon name="map-pin" /> Huancayo · Perú</span>
       </div>
     </div>
 
-    <div class="zones-heading"><h2>Zonas de mayor incidencia</h2><span>{{ hotspots().length }} puntos de referencia</span></div>
+    <div class="zones-heading"><h2>Zonas de mayor incidencia</h2><span>{{ hotspots().length }} puntos registrados</span></div>
     @if (selectedHotspot(); as selected) {
       <p class="selection-announcement" role="status">Punto seleccionado: {{ selected.name }}, {{ selected.decibels }} dB aproximados.</p>
     }
@@ -35,15 +35,15 @@
     <div class="zones-grid">
       @for (point of hotspots(); track point.id; let index = $index) {
         <article class="zone-card" [class.selected]="selectedId() === point.id" [attr.aria-labelledby]="'zone-' + point.id">
-          <div class="zone-topline"><span>{{ point.sector }}</span><span class="decibel-pill">{{ point.decibels }} dB aprox.</span></div>
+          <div class="zone-topline"><span>{{ point.sector }}</span><span class="decibel-pill">{{ point.decibels }} dB {{ point.illustrative ? 'aprox.' : 'reportados' }}</span></div>
           <h3 [id]="'zone-' + point.id"><button type="button" (click)="selectPoint(point)" [attr.aria-pressed]="selectedId() === point.id">{{ point.name }}</button></h3>
           <p class="zone-area">{{ point.area }}</p>
-          <div class="noise-source"><span>Fuente principal</span><p><app-icon [name]="index === 0 ? 'bus' : index === 1 ? 'megaphone' : 'truck'" />{{ point.source_label }}</p></div>
+          <div class="noise-source"><span>Fuente principal</span><p><app-icon [name]="sourceIcon(point.source)" />{{ point.source_label }}</p></div>
           <p class="zone-description">{{ point.description }}</p>
           <div class="zone-level"><div><span>{{ point.time_label }}</span><span>{{ difference(point) }}</span></div><div class="level-track" aria-hidden="true"><span [style.width.%]="intensity(point.decibels)"></span></div></div>
         </article>
       }
     </div>
-    <aside class="methodology-note"><app-icon name="info" /><p><strong>Nota metodológica:</strong> Puntos y mediciones ilustrativos para el diseño y la sensibilización ciudadana. No representan monitoreo en tiempo real.</p><span>Cartografía cívica · DecibelCity</span></aside>
+    <aside class="methodology-note"><app-icon name="info" /><p><strong>Nota metodológica:</strong> Datos de referencia y reportes ciudadanos para el diseño y la sensibilización ciudadana. No representan monitoreo en tiempo real.</p><span>Cartografía cívica · DecibelCity</span></aside>
   }
 </section>

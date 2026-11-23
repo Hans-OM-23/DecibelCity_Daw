@@ -161,6 +161,18 @@ public sealed class PostgresIntegrationTests
             SELECT column_name FROM information_schema.columns WHERE table_schema = current_schema() AND table_name = 'reportes_ciudadanos'
             """)).Select(r => (string)r[0]!);
         Assert.DoesNotContain(reportColumns, c => c.Contains("usuario", StringComparison.Ordinal));
+
+        var storedHotspot = (await db.RowsAsync($"""
+            SELECT p.nombre, p.nivel_db, p.ilustrativo, p.latitud, p.longitud, p.sector
+            FROM puntos_criticos p
+            WHERE p.id_punto = '{receipt.GetProperty("id").GetString()}'
+            """)).Single();
+        Assert.Equal(receipt.GetProperty("location").GetString(), storedHotspot[0]);
+        Assert.Equal(74.0, storedHotspot[1]);
+        Assert.Equal(false, storedHotspot[2]);
+        Assert.NotNull(storedHotspot[3]);
+        Assert.NotNull(storedHotspot[4]);
+        Assert.Equal("Reporte ciudadano", storedHotspot[5]);
     }
 
     [Fact]
