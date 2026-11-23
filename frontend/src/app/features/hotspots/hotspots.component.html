@@ -1,0 +1,49 @@
+<section class="hotspots-page container" aria-labelledby="hotspots-title">
+  <header class="page-intro">
+    <div>
+      <div class="intro-labels"><span class="badge"><span class="status-dot"></span> Cartografía sonora cívica</span><span class="province">Provincia de Huancayo</span></div>
+      <h1 id="hotspots-title">Puntos críticos de ruido<span class="title-dot">.</span></h1>
+      <p>Conoce las zonas de Huancayo con mayor exposición acústica.</p>
+      <p class="illustration-note">Datos ilustrativos para explorar nuestro entorno sonoro.</p>
+    </div>
+    <a class="button button-secondary report-point" routerLink="/reportar"><app-icon name="map-pin" /> Reportar un punto</a>
+  </header>
+
+  @if (loading()) {
+    <div class="data-state" role="status"><span class="loading-dot"></span> Cargando la cartografía sonora…</div>
+  } @else if (error()) {
+    <div class="data-state error-state" role="alert"><app-icon name="info" /><p>{{ error() }}</p><button class="button button-secondary" (click)="loadHotspots()">Volver a intentar</button></div>
+  } @else {
+    <div class="map-shell">
+      <div class="map-weather-slot">
+        <app-weather-badge />
+      </div>
+      <app-map [points]="mapPoints()" [selectedId]="selectedId()" (pointSelected)="selectedId.set($event)" />
+      <div class="map-caption">
+        <div class="map-legend"><span class="legend-label"><span class="status-dot"></span> Capa acústica ilustrativa</span><p>Posiciones aproximadas sobre cartografía de OpenStreetMap. Los niveles de ruido son datos de ejemplo.</p></div>
+        <span class="map-area"><app-icon name="map-pin" /> Huancayo · Perú</span>
+      </div>
+    </div>
+
+    <div class="zones-heading"><h2>Zonas de mayor incidencia</h2><span>{{ hotspots().length }} puntos de referencia</span></div>
+    @if (selectedHotspot(); as selected) {
+      <p class="selection-announcement" role="status">Punto seleccionado: {{ selected.name }}, {{ selected.decibels }} dB aproximados.</p>
+    }
+    @if (hotspots().length === 0) {
+      <div class="data-state">Aún no hay puntos disponibles. Puedes contribuir con el primer reporte.</div>
+    }
+    <div class="zones-grid">
+      @for (point of hotspots(); track point.id; let index = $index) {
+        <article class="zone-card" [class.selected]="selectedId() === point.id" [attr.aria-labelledby]="'zone-' + point.id">
+          <div class="zone-topline"><span>{{ point.sector }}</span><span class="decibel-pill">{{ point.decibels }} dB aprox.</span></div>
+          <h3 [id]="'zone-' + point.id"><button type="button" (click)="selectPoint(point)" [attr.aria-pressed]="selectedId() === point.id">{{ point.name }}</button></h3>
+          <p class="zone-area">{{ point.area }}</p>
+          <div class="noise-source"><span>Fuente principal</span><p><app-icon [name]="index === 0 ? 'bus' : index === 1 ? 'megaphone' : 'truck'" />{{ point.source_label }}</p></div>
+          <p class="zone-description">{{ point.description }}</p>
+          <div class="zone-level"><div><span>{{ point.time_label }}</span><span>{{ difference(point) }}</span></div><div class="level-track" aria-hidden="true"><span [style.width.%]="intensity(point.decibels)"></span></div></div>
+        </article>
+      }
+    </div>
+    <aside class="methodology-note"><app-icon name="info" /><p><strong>Nota metodológica:</strong> Puntos y mediciones ilustrativos para el diseño y la sensibilización ciudadana. No representan monitoreo en tiempo real.</p><span>Cartografía cívica · DecibelCity</span></aside>
+  }
+</section>

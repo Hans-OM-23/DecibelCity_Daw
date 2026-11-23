@@ -1,0 +1,11 @@
+:host { display: block; }
+.legal-page { max-width: 840px; padding-block: 55px 90px; }
+.eyebrow { display: block; color: var(--accent); margin-top: 38px; }
+h1 { font-size: clamp(32px, 4vw, 46px); margin: 20px 0; }
+h2 { font-size: 22px; margin: 34px 0 12px; }
+p { color: var(--muted); font-size: 15px; line-height: 1.8; }
+.intro { font-size: 18px; }
+a { color: var(--accent); }
+p a { text-decoration: underline; text-underline-offset: 3px; }
+.back-link { font-size: 13px; }
+.footnote { padding: 20px; border: 1px solid var(--border); border-radius: 8px; font-size: 13px; }

@@ -1,0 +1,52 @@
+<section class="hero container" aria-labelledby="home-title">
+  <span class="badge hero-badge"><span class="status-dot"></span> RED CÍVICA ACÚSTICA · HUANCAYO</span>
+  <h1 id="home-title">El ruido de tu ciudad,<br><span>en perspectiva.</span></h1>
+  <p class="hero-description">Conoce el entorno acústico de Huancayo y contribuye a construir una<br class="desktop-break"> ciudad más saludable a través de datos cívicos transparentes.</p>
+  <div class="coordinates" aria-label="Huancayo, Valle del Mantaro">
+    <span>12°04′00″ S</span><span class="separator">·</span><span>75°12′40″ O</span><span class="separator">·</span><span>Valle del Mantaro</span>
+  </div>
+  <app-sound-meter />
+</section>
+
+<div class="container lower-content">
+  <section class="territory" aria-labelledby="territory-title">
+    <img src="/images/huancayo.jpg" alt="Paisaje urbano de Huancayo, en el Valle del Mantaro" loading="lazy" width="1400" height="440">
+    <div class="territory-content">
+      <div>
+        <span class="eyebrow">CONTEXTO TERRITORIAL</span>
+        <h2 id="territory-title">Cada calle tiene un sonido.<br>Escuchemos lo que nuestra ciudad nos cuenta.</h2>
+      </div>
+      <a routerLink="/puntos-criticos" class="map-link">Explorar mapa de ruido <app-icon name="arrow-right" /></a>
+    </div>
+  </section>
+
+  <section class="purpose" aria-labelledby="purpose-title">
+    <div>
+      <span class="eyebrow">PROPÓSITO CÍVICO</span>
+      <h2 id="purpose-title">Ciencia comunitaria<br>al servicio del descanso</h2>
+    </div>
+    <p>Ciencia ciudadana para visibilizar el impacto del ruido urbano en la salud, la convivencia y la tranquilidad de las calles de Huancayo. Una comunidad que escucha puede transformar experiencias individuales en información compartida para construir una ciudad más habitable.</p>
+  </section>
+
+  <section class="goals" aria-labelledby="goals-title">
+    <span class="eyebrow goals-eyebrow">ALINEACIÓN ESTRATÉGICA</span>
+    <h2 id="goals-title">Compromiso con la Agenda 2030</h2>
+    <div class="goals-grid">
+      <article class="goal-card health">
+        <div class="goal-top"><span class="goal-tag">ODS 3</span><app-icon name="leaf" /></div>
+        <h3>Salud y bienestar</h3>
+        <p>Promovemos la conciencia sobre el entorno sonoro, el cuidado de la salud auditiva y el derecho a un descanso digno.</p>
+      </article>
+      <article class="goal-card innovation">
+        <div class="goal-top"><span class="goal-tag">ODS 9</span><app-icon name="radio" /></div>
+        <h3>Industria e infraestructura</h3>
+        <p>Tecnología abierta y accesible para acercar la observación del ruido a la ciudadanía y compartir información de nuestro entorno.</p>
+      </article>
+      <article class="goal-card cities">
+        <div class="goal-top"><span class="goal-tag">ODS 11</span><app-icon name="building" /></div>
+        <h3>Ciudades sostenibles</h3>
+        <p>Una mirada colectiva al tránsito y los espacios públicos para imaginar barrios más tranquilos, habitables y saludables en Junín.</p>
+      </article>
+    </div>
+  </section>
+</div>

@@ -1,0 +1,37 @@
+# Contexto de construcción: backend/
+
+# Compilaciones y artefactos locales
+**/bin/
+**/obj/
+**/out/
+**/publish/
+**/TestResults/
+*.user
+*.suo
+*.log
+
+# Configuración privada: nunca dentro de la imagen
+.env
+.env.*
+!.env.example
+*.pfx
+*.pem
+*.key
+appsettings.*.local.json
+
+# Archivos de la propia construcción y del editor
+Dockerfile
+.dockerignore
+.git/
+.github/
+.vs/
+.vscode/
+.idea/
+**/node_modules/
+**/.DS_Store
+**/Thumbs.db
+
+# Solo para desarrollo local
+DecibelCity.http
+Properties/launchSettings.json
+README.md

@@ -1,0 +1,47 @@
+﻿# Incluir únicamente el proyecto
+/*
+!/.gitignore
+!/README.md
+!/frontend/
+!/backend/
+!/backend.Tests/
+!/global.json
+!/docker-compose.yml
+!/Database/
+!/testsprite_tests/
+!/.github/
+
+# Dependencias, compilaciones y cachés
+**/bin/
+**/obj/
+**/TestResults/
+*.user
+*.suo
+**/.vs/
+**/node_modules/
+**/.angular/
+**/dist/
+**/out-tsc/
+**/.cache/
+**/coverage/
+
+# Configuración privada
+.env
+.env.*
+!.env.example
+/backend/.env
+*.log
+.DS_Store
+Thumbs.db
+
+# Datos locales y modelos históricos
+/Database/local/
+/Database/referencias/
+
+# Configuración del editor e instrucciones de agentes
+**/.vscode/
+**/.idea/
+**/.agents/
+**/AGENTS.md
+testsprite_tests/tmp/
+testsprite_tests/tmp/config.json

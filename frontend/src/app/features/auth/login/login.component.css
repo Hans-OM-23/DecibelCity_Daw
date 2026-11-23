@@ -1,0 +1,99 @@
+.auth-section {
+  min-height: calc(100vh - 180px);
+  display: flex;
+  align-items: center;
+}
+
+.auth-card {
+  --control-bg: #101722;
+  --control-border: #2c3647;
+  --control-hover: #172232;
+  --control-radius: 9px;
+  --control-ring: 0 0 0 3px #8bd4ff14;
+  --control-height: 52px;
+  background-color: var(--surface);
+  border-color: var(--border) !important;
+  border-radius: 12px;
+}
+
+.auth-card .form-control {
+  min-height: var(--control-height);
+  padding: 14px 15px;
+  font-size: 13px;
+  line-height: 1.5;
+  background-color: var(--control-bg);
+  border: 1px solid var(--control-border);
+  color: var(--ink);
+  border-radius: var(--control-radius);
+  outline: none;
+  transition: border-color .18s, background-color .18s, box-shadow .18s;
+}
+
+.auth-card .form-control:hover:not(:disabled) {
+  border-color: #43546b;
+}
+
+.auth-card .form-control:focus {
+  background-color: var(--control-hover);
+  border-color: #8bd4ff99;
+  color: #fff;
+  box-shadow: var(--control-ring);
+}
+
+.auth-card .form-control::placeholder {
+  color: #a9b3c0;
+  opacity: 1;
+}
+
+.auth-card .form-control.is-invalid,
+.auth-card .form-control[aria-invalid='true'] {
+  border-color: #e9959580;
+}
+
+.auth-card .form-control.is-invalid:focus {
+  box-shadow: 0 0 0 3px rgba(255, 178, 172, 0.2);
+}
+
+.auth-card .form-control:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.auth-card .invalid-feedback {
+  color: #ffb4b4;
+  font-size: 11px;
+  line-height: 1.6;
+  margin-top: 6px;
+}
+
+.alert-danger {
+  background-color: rgba(255, 178, 172, 0.12);
+  border-color: rgba(255, 178, 172, 0.3);
+  color: #ffb2ac;
+}
+
+.alert-success {
+  background-color: rgba(139, 212, 255, 0.12);
+  border-color: rgba(139, 212, 255, 0.3);
+  color: #8bd4ff;
+}
+
+.alert-info {
+  background-color: rgba(139, 212, 255, 0.1);
+  border-color: rgba(139, 212, 255, 0.25);
+  color: #8bd4ff;
+}
+
+.turnstile-field {
+  min-height: 65px;
+}
+
+.turnstile-wrapper {
+  border-radius: var(--control-radius);
+  overflow: hidden;
+}
+
+.turnstile-widget {
+  display: flex;
+  justify-content: center;
+}

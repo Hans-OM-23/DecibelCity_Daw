@@ -1,0 +1,136 @@
+<section class="auth-section py-5" aria-labelledby="login-heading">
+  <div class="container">
+    <div class="row justify-content-center">
+      <div class="col-12 col-sm-10 col-md-8 col-lg-5">
+        <div class="card auth-card shadow-sm border">
+          <div class="card-body p-4 p-sm-5">
+            <header class="text-center mb-4">
+              <span class="badge mb-2"><app-icon name="user" /> ACCESO A LA PLATAFORMA</span>
+              <h1 id="login-heading" class="h3 fw-semibold mb-1">Iniciar sesión</h1>
+              <p class="text-body-secondary small mb-0">
+                Inicia sesión para enviar reportes. Su contenido se guarda sin vincularlo a tu perfil.
+              </p>
+            </header>
+
+            @if (hasPendingDraft()) {
+              <div class="alert alert-info d-flex align-items-center gap-2 mb-3" role="status" aria-live="polite">
+                <app-icon name="info" />
+                <span class="small">Inicia sesión para enviar tu reporte guardado. Tu ubicación y descripción se mantienen intactas.</span>
+              </div>
+            }
+
+            @if (errorMessage()) {
+              <div class="alert alert-danger d-flex align-items-center gap-2 mb-3" role="alert" aria-live="polite">
+                <app-icon name="alert-circle" />
+                <span class="small">{{ errorMessage() }}</span>
+              </div>
+            }
+
+            @if (successMessage()) {
+              <div class="alert alert-success d-flex align-items-center gap-2 mb-3" role="alert" aria-live="polite">
+                <app-icon name="check-circle" />
+                <span class="small">{{ successMessage() }}</span>
+              </div>
+            }
+
+            <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" novalidate>
+              <div class="mb-3">
+                <label for="login-usuario" class="form-label fw-medium">
+                  Usuario <span class="text-danger" aria-hidden="true">*</span>
+                </label>
+                <input
+                  id="login-usuario"
+                  type="text"
+                  class="form-control"
+                  formControlName="nombre_usuario"
+                  placeholder="Ej. mgarcia"
+                  autocomplete="username"
+                  required
+                  [class.is-invalid]="nombreUsuarioControl.invalid && nombreUsuarioControl.touched"
+                  [attr.aria-invalid]="nombreUsuarioControl.invalid && nombreUsuarioControl.touched"
+                  [attr.aria-describedby]="nombreUsuarioControl.invalid && nombreUsuarioControl.touched ? 'login-usuario-error' : null"
+                />
+                @if (nombreUsuarioControl.invalid && nombreUsuarioControl.touched) {
+                  <div id="login-usuario-error" class="invalid-feedback d-block" role="alert">
+                    @if (nombreUsuarioControl.hasError('required')) {
+                      El nombre de usuario es obligatorio.
+                    } @else {
+                      El usuario debe tener entre 1 y 40 caracteres.
+                    }
+                  </div>
+                }
+              </div>
+
+              <div class="mb-4">
+                <label for="login-contrasena" class="form-label fw-medium">
+                  Contraseña <span class="text-danger" aria-hidden="true">*</span>
+                </label>
+                <input
+                  id="login-contrasena"
+                  type="password"
+                  class="form-control"
+                  formControlName="contrasena"
+                  placeholder="Tu contraseña"
+                  autocomplete="current-password"
+                  required
+                  [class.is-invalid]="contrasenaControl.invalid && contrasenaControl.touched"
+                  [attr.aria-invalid]="contrasenaControl.invalid && contrasenaControl.touched"
+                  [attr.aria-describedby]="contrasenaControl.invalid && contrasenaControl.touched ? 'login-contrasena-error' : null"
+                />
+                @if (contrasenaControl.invalid && contrasenaControl.touched) {
+                  <div id="login-contrasena-error" class="invalid-feedback d-block" role="alert">
+                    @if (contrasenaControl.hasError('required')) {
+                      La contraseña es obligatoria.
+                    } @else {
+                      La contraseña debe tener entre 1 y 128 caracteres.
+                    }
+                  </div>
+                }
+              </div>
+
+              @if (turnstileEnabled()) {
+                <div class="turnstile-field mb-3 text-center">
+                  <div class="turnstile-wrapper d-inline-block">
+                    <div #turnstileContainer id="turnstile-container" class="turnstile-widget"></div>
+                  </div>
+                  @if (turnstileLoading()) {
+                    <p class="small text-body-secondary mt-1 mb-0" role="status">Cargando verificación de seguridad…</p>
+                  }
+                  @if (turnstileError()) {
+                    <div class="invalid-feedback d-block mt-1" role="alert">{{ turnstileError() }}</div>
+                  }
+                </div>
+              }
+
+              <div class="d-grid mb-3">
+                <button
+                  type="submit"
+                  class="button button-primary w-100"
+                  [disabled]="isSubmitting() || !!successMessage()"
+                  [attr.aria-busy]="isSubmitting()"
+                >
+                  @if (isSubmitting()) {
+                    <span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+                    <span>Verificando credenciales...</span>
+                  } @else {
+                    <span>Iniciar sesión</span>
+                    <app-icon name="arrow-right" />
+                  }
+                </button>
+              </div>
+
+              <div class="text-center pt-2 border-top">
+                <p class="small text-body-secondary mb-0">
+                  ¿Aún no tienes cuenta?
+                  <a [routerLink]="['/registro']" [queryParams]="returnUrl ? { returnUrl } : null" class="fw-semibold text-decoration-underline ms-1">
+                    Regístrate aquí
+                  </a>
+                </p>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

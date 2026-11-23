@@ -1,0 +1,32 @@
+<article class="legal-page container">
+  <a class="back-link" routerLink="/">← Volver a DecibelCity</a>
+  <span class="eyebrow">Participación transparente</span>
+  @if (kind() === 'privacy') {
+    <h1>Tu información, con claridad.</h1>
+    <p class="intro">Esta página explica cómo funciona la información en el prototipo de DecibelCity.</p>
+    <h2>Lo que contiene un reporte</h2>
+    <p>Guardamos el identificador del lugar seleccionado, la fuente de ruido, tu descripción, el nivel opcional y la fecha del reporte. Debes iniciar sesión para enviarlo, pero su contenido se almacena sin vincularlo a tu cuenta. Esto no garantiza anonimato total. Evita incluir nombres, teléfonos o información personal en la descripción. Los reportes no se publican automáticamente.</p>
+    <h2>Cuentas y acceso</h2>
+    <p>Para registrar una cuenta guardamos tus nombres, apellidos, teléfono, dirección declarada, nombre de usuario, distrito, rol y fecha de registro. La provincia y el departamento se obtienen del distrito. Guardamos un hash Argon2id de tu contraseña, nunca la contraseña original.</p>
+    <p>Una cookie de acceso permite comprobar tu sesión durante un máximo de ocho horas. Cerrar sesión la revoca; reiniciar este prototipo también exige volver a ingresar. El perfil confirmado se mantiene en memoria del navegador. Todavía no puedes consultar ni gestionar reportes personales.</p>
+    <p>Al intentar enviar guardamos un borrador en esta pestaña, con la ubicación seleccionada y el resto de campos, para recuperarlo después de iniciar sesión o registrarte. Se elimina al confirmar el envío o al iniciar un reporte nuevo. Si el navegador bloquea el almacenamiento, solo se conserva mientras la aplicación siga abierta sin recargarse.</p>
+    <h2>Mapas y búsquedas</h2>
+    <p>La cartografía proviene de OpenStreetMap. Al ver un mapa, tu navegador descarga las imágenes del mapa desde los servidores de teselas configurados (por defecto, los de la Fundación OpenStreetMap), que reciben datos de conexión según su <a href="https://osmfoundation.org/wiki/Privacy_Policy" target="_blank" rel="noopener noreferrer">Política de Privacidad</a>. Las búsquedas de lugares las envía nuestro servidor a Photon y la verificación del lugar a Nominatim, sin datos que te identifiquen. Al enviar el reporte, la dirección y las coordenadas verificadas se muestran en el recibo; conservamos solo el identificador del lugar de OpenStreetMap.</p>
+    <h2>Tu micrófono</h2>
+    <p>El micrófono sólo se utiliza si inicias la medición y autorizas su uso en el navegador. El sonido se procesa en tu dispositivo: no se graba ni se envía a DecibelCity. Detener la medición o salir de Inicio libera el micrófono.</p>
+    <h2>Almacenamiento del prototipo</h2>
+    <p>Los reportes se almacenan en la instalación que ejecuta esta aplicación. No existe una página pública para consultar su contenido. Los servicios de alojamiento y de mapas pueden tratar datos de conexión según su configuración y sus propias políticas.</p>
+    <p class="footnote">Antes de ofrecer una instalación pública, su responsable debe publicar sus datos de contacto y las condiciones de conservación y atención de solicitudes aplicables a esa instalación.</p>
+    <a class="back-link" routerLink="/condiciones">Consultar condiciones de uso →</a>
+  } @else {
+    <h1>Participar con responsabilidad.</h1>
+    <p class="intro">DecibelCity es un prototipo de observación cívica del entorno acústico de Huancayo.</p>
+    <h2>Alcance de la información</h2>
+    <p>Los niveles de los puntos iniciales son ilustrativos. La lectura del micrófono muestra un nivel digital relativo y no sustituye un sonómetro calibrado. Un reporte no constituye una denuncia formal ni acredita una infracción.</p>
+    <h2>Lugares y reportes</h2>
+    <p>Selecciona un lugar relacionado con el problema y describe lo que observaste sin incluir información personal ni acusaciones contra personas. Verificar que el lugar existe no confirma el ruido ni la descripción del reporte.</p>
+    <h2>OpenStreetMap</h2>
+    <p>Los datos cartográficos son © <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener noreferrer">colaboradores de OpenStreetMap</a>, disponibles bajo la licencia ODbL. La búsqueda usa <a href="https://photon.komoot.io" target="_blank" rel="noopener noreferrer">Photon</a> y la verificación, <a href="https://nominatim.org" target="_blank" rel="noopener noreferrer">Nominatim</a>. Son servicios comunitarios gratuitos, sin garantía de disponibilidad, y su precisión depende de los datos aportados por la comunidad.</p>
+    <a class="back-link" routerLink="/privacidad">Consultar información de privacidad →</a>
+  }
+</article>

@@ -1,0 +1,31 @@
+@if (weather(); as data) {
+  <aside
+    class="weather-badge"
+    role="region"
+    aria-label="Condiciones meteorológicas actuales en Huancayo"
+  >
+    <div class="weather-top">
+      <div class="weather-condition-group">
+        <app-icon [name]="iconFor(data.weather_code, data.icon)" class="weather-icon" />
+        <span class="weather-temp">{{ data.temperature_c }}°C</span>
+        <span class="weather-condition">{{ data.condition }}</span>
+      </div>
+      <span class="weather-badge-tag" title="Dato meteorológico real de Open-Meteo, independiente de las mediciones de ruido">
+        Dato ambiental real
+      </span>
+    </div>
+
+    <div class="weather-metrics" aria-label="Humedad, viento y sensación térmica">
+      <span>Sensación: <strong>{{ data.apparent_temperature_c }}°C</strong></span>
+      <span class="sep" aria-hidden="true">·</span>
+      <span>Humedad: <strong>{{ data.humidity_percent }}%</strong></span>
+      <span class="sep" aria-hidden="true">·</span>
+      <span>Viento: <strong>{{ data.wind_speed_kmh }} km/h</strong></span>
+    </div>
+
+    <div class="weather-footer">
+      <span>Huancayo · Fuente: <a href="https://open-meteo.com/" target="_blank" rel="noopener noreferrer">Open-Meteo</a></span>
+      <span class="noise-distinction">No asociado al nivel de ruido</span>
+    </div>
+  </aside>
+}

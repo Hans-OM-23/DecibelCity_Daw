@@ -1,0 +1,77 @@
+<section class="report-page" aria-labelledby="report-title">
+  <header class="report-intro">
+    <div class="intro-topline"><span class="eyebrow"><span class="status-dot"></span> Participación cívica / Reporte ciudadano</span><span class="badge">Tu ciudad, tu voz</span></div>
+    <h1 id="report-title">Ayúdanos a identificar<br class="desktop-break"> zonas ruidosas<span class="title-dot">.</span></h1>
+    <p>Registra un punto donde el ruido ambiental afecte a tu comunidad en Huancayo.</p>
+  </header>
+
+  @if (receipt(); as report) {
+    <div class="receipt-card" role="status" aria-live="polite">
+      <span class="receipt-icon"><app-icon name="check" /></span>
+      <span class="eyebrow">Reporte recibido</span>
+      <h2>Gracias por hacerte escuchar.</h2>
+      <p>Tu aporte se registró correctamente. Cada reporte nos ayuda a conocer mejor el entorno sonoro de Huancayo.</p>
+      <dl><div><dt>Ubicación</dt><dd>{{ report.location }}</dd></div><div><dt>Código de reporte</dt><dd class="receipt-id">{{ report.id }}</dd></div><div><dt>Fecha de registro</dt><dd>{{ report.created_at | date:'dd/MM/yyyy, HH:mm' }}</dd></div><div><dt>Nivel aproximado</dt><dd>{{ report.decibels === null ? 'No indicado' : report.decibels + ' dBA' }}</dd></div></dl>
+      <p class="receipt-explanation">Los reportes ciudadanos se almacenan por separado de los puntos ilustrativos del mapa. Este registro no constituye una denuncia ante una autoridad.</p>
+      <div class="receipt-actions"><button class="button button-primary" type="button" (click)="newReport()"><app-icon name="plus" /> Crear otro reporte</button><a class="button button-secondary" routerLink="/puntos-criticos">Explorar el mapa <app-icon name="arrow-right" /></a></div>
+    </div>
+  } @else {
+    <form class="report-form" (submit)="submit($event)" novalidate [attr.aria-busy]="submitting()">
+      <div class="form-topline"><span>Un pequeño aporte. Un gran cambio.</span><span>01 — 04</span></div>
+      <fieldset [disabled]="submitting()">
+        <legend class="visually-hidden">Información del punto de ruido</legend>
+        <div class="form-field location-field" role="group" aria-labelledby="location-label" [attr.aria-describedby]="fieldError('location') ? 'location-hint location-error' : 'location-hint'">
+          <span id="location-label" class="visually-hidden">Ubicación del problema</span>
+          <app-location-picker [selectedPlace]="selectedPlace()" [disabled]="submitting()" (locationSelected)="selectLocation($event)" />
+          <p id="location-hint" class="field-hint">Busca una calle, plaza o lugar de Huancayo y selecciona una sugerencia. El servicio verificará la ubicación con OpenStreetMap al enviar el reporte.</p>
+          @if (fieldError('location')) { <p id="location-error" class="field-error" role="alert">{{ fieldError('location') }}</p> }
+        </div>
+
+        <div class="form-field">
+          <label for="report-source"><app-icon name="volume" />Fuente del ruido <span class="required-mark">*</span></label>
+          <div class="select-wrapper" [class.has-selection]="!!source()" [class.is-disabled]="sourcesLoading() || !!sourcesError() || submitting()">
+            <span class="select-leading" aria-hidden="true"><app-icon [name]="source() === 'traffic' ? 'bus' : source() === 'commerce' ? 'megaphone' : source() === 'construction' ? 'truck' : source() === 'entertainment' ? 'radio' : 'volume'" /></span>
+            <select id="report-source" name="source" required [value]="source()" (change)="updateText('source', $event)" (blur)="touch('source')" [disabled]="sourcesLoading() || !!sourcesError()" [attr.aria-invalid]="fieldError('source') ? true : null" [attr.aria-describedby]="fieldError('source') ? 'source-hint source-error' : 'source-hint'">
+              <option value="" disabled>{{ sourcesLoading() ? 'Cargando opciones…' : 'Selecciona la fuente del ruido' }}</option>
+              @for (item of sources(); track item.value) { <option [value]="item.value">{{ item.label }}</option> }
+            </select>
+            <app-icon class="select-chevron" name="chevron-down" />
+          </div>
+          <p id="source-hint" class="field-hint">Elige el sonido que más se percibe en ese lugar.</p>
+          @if (sourcesError()) { <div class="source-error" role="alert"><p>{{ sourcesError() }}</p><button type="button" class="retry-link" (click)="loadSources()">Volver a cargar opciones <app-icon name="arrow-right" /></button></div> }
+          @if (fieldError('source') && !sourcesError()) { <p id="source-error" class="field-error">{{ fieldError('source') }}</p> }
+        </div>
+
+        <div class="decibel-field" [class.enabled]="includeDecibels()">
+          <div class="decibel-heading"><label for="include-decibels"><app-icon name="activity" />Nivel aproximado de ruido <span>(opcional)</span></label><output for="report-decibels decibel-slider" class="decibel-output">{{ includeDecibels() ? (decibels() ?? '—') : '—' }} <span>dBA</span></output></div>
+          <label class="measurement-toggle" for="include-decibels"><input id="include-decibels" type="checkbox" [checked]="includeDecibels()" (change)="toggleDecibels($event)"><span class="toggle-track" aria-hidden="true"></span><span>Tengo un nivel de ruido para agregar</span></label>
+          <input id="decibel-slider" name="decibel-slider" type="range" min="30" max="120" step="1" [value]="decibels() ?? 70" [disabled]="!includeDecibels()" [style.--level]="levelPercentage() + '%'" (input)="updateDecibels($event)" aria-label="Ajustar nivel aproximado de ruido en dBA">
+          <div class="range-labels" aria-hidden="true"><span>30 dB <small>Calmo</small></span><span>70 dB <small>Referencia</small></span><span>120 dB <small>Muy alto</small></span></div>
+          <div class="number-wrapper" [class.is-disabled]="!includeDecibels() || submitting()"><input id="report-decibels" name="decibels" type="number" inputmode="decimal" min="30" max="120" step="any" placeholder="Introduce tu medición" [value]="includeDecibels() ? (decibels() ?? '') : ''" [disabled]="!includeDecibels()" (input)="updateDecibels($event)" (blur)="touch('decibels')" aria-label="Nivel aproximado de ruido en dBA" [attr.aria-invalid]="fieldError('decibels') ? true : null" [attr.aria-describedby]="fieldError('decibels') ? 'decibels-error' : 'decibels-hint'"><span aria-hidden="true">dBA</span></div>
+          @if (fieldError('decibels')) { <p id="decibels-error" class="field-error">{{ fieldError('decibels') }}</p> }
+          <p id="decibels-hint" class="field-hint">Puedes reportar sin una medición. Solo se enviará un nivel si activas esta opción.</p>
+        </div>
+
+        <div class="form-field description-field">
+          <label for="report-description"><app-icon name="align-left" />Descripción breve del problema <span class="required-mark">*</span></label>
+          <textarea id="report-description" name="description" rows="5" required minlength="10" maxlength="500" placeholder="Describe el impacto del sonido en la zona, las horas de mayor molestia y su frecuencia…" [value]="description()" (input)="updateText('description', $event)" (blur)="touch('description')" [attr.aria-invalid]="fieldError('description') ? true : null" [attr.aria-describedby]="fieldError('description') ? 'description-hint description-error' : 'description-hint'"></textarea>
+          <div id="description-hint" class="description-meta"><span>Entre 10 y 500 caracteres. Evita incluir datos personales.</span><span [class.at-limit]="description().length === 500">{{ description().length }} / 500</span></div>
+          @if (fieldError('description')) { <p id="description-error" class="field-error">{{ fieldError('description') }}</p> }
+        </div>
+      </fieldset>
+
+      @if (submitError()) { <div class="submit-error" role="alert"><app-icon name="info" /><p>{{ submitError() }}</p></div> }
+      @if (attempted() && (errors().location || errors().source || errors().description || errors().decibels)) { <p class="validation-summary" role="alert">Revisa los campos indicados para continuar.</p> }
+      <button class="button button-primary submit-button" type="submit" [disabled]="submitting() || sourcesLoading() || !!sourcesError() || !selectedPlace()" [attr.aria-describedby]="!selectedPlace() ? 'submit-location-hint' : null"><app-icon [name]="submitting() ? 'activity' : 'send'" />{{ submitting() ? 'Enviando tu reporte…' : submitError() ? 'Reintentar envío' : 'Enviar reporte' }}</button>
+      @if (!selectedPlace()) { <p id="submit-location-hint" class="submit-location-hint">Selecciona una ubicación de las sugerencias para habilitar el envío.</p> }
+      <p class="required-note"><span>*</span> Campos necesarios para registrar tu aporte.</p>
+    </form>
+  }
+
+  <aside class="privacy-note"><app-icon name="shield" /><div><p>Debes iniciar sesión para enviar. Si necesitas ingresar o registrarte, conservaremos el borrador para que vuelvas al formulario. El reporte se guarda sin vincularlo a tu cuenta; evita incluir datos personales.</p><p class="location-verification-note">Las búsquedas de ubicación se envían desde nuestro servidor a servicios de OpenStreetMap (Photon y Nominatim), sin datos que te identifiquen. Al enviar, guardamos el identificador del lugar junto con tu reporte. <a routerLink="/privacidad">Conoce cómo usamos la información.</a></p></div></aside>
+  <div class="reference-cards">
+    <article><span class="reference-label"><app-icon name="shield" /> Referencia residencial</span><h2>Espacios para descansar</h2><p>60 dBA de día · 50 dBA de noche.</p><p class="reference-description">Valores referenciales para entender el entorno acústico de las zonas residenciales.</p></article>
+    <article><span class="reference-label"><app-icon name="building" /> Referencia comercial</span><h2>Centro y mercados</h2><p>70 dBA durante el día.</p><p class="reference-description">Un punto de referencia para conversar sobre el ruido en las zonas comerciales.</p></article>
+  </div>
+  <p class="reference-footnote"><app-icon name="info" /> Información orientativa. Este formulario no sustituye una evaluación acústica profesional.</p>
+</section>

@@ -1,0 +1,328 @@
+<section class="auth-section py-5" aria-labelledby="register-heading">
+  <div class="container">
+    <div class="row justify-content-center">
+      <div class="col-12 col-md-10 col-lg-8 col-xl-7">
+        <div class="card auth-card shadow-sm border">
+          <div class="card-body p-4 p-sm-5">
+            <header class="text-center mb-4">
+              <span class="badge mb-2"><app-icon name="user" /> CREAR CUENTA CIUDADANA</span>
+              <h1 id="register-heading" class="h3 fw-semibold mb-1">Registro de usuario</h1>
+              <p class="text-body-secondary small mb-0">
+                Crea una cuenta para enviar reportes. Su contenido se guarda sin vincularlo a tu perfil.
+              </p>
+            </header>
+
+            @if (hasPendingDraft()) {
+              <div class="alert alert-info d-flex align-items-center gap-2 mb-3" role="status" aria-live="polite">
+                <app-icon name="info" />
+                <span class="small">Crea tu cuenta para completar el envío de tu reporte de ruido. Conservamos tu borrador y ubicación listos para publicar.</span>
+              </div>
+            }
+
+            @if (errorMessage()) {
+              <div class="alert alert-danger d-flex align-items-center gap-2 mb-3" role="alert" aria-live="polite">
+                <app-icon name="alert-circle" />
+                <span class="small">{{ errorMessage() }}</span>
+              </div>
+            }
+
+            @if (successMessage()) {
+              <div class="alert alert-success d-flex align-items-center gap-2 mb-3" role="alert" aria-live="polite">
+                <app-icon name="check-circle" />
+                <span class="small">{{ successMessage() }}</span>
+              </div>
+            }
+
+            @if (territoriesError()) {
+              <div class="alert alert-warning d-flex align-items-center justify-content-between gap-2 mb-3" role="alert">
+                <div class="d-flex align-items-center gap-2">
+                  <app-icon name="alert-triangle" />
+                  <span class="small">{{ territoriesError() }}</span>
+                </div>
+                <button type="button" class="btn btn-sm btn-outline-warning" (click)="loadTerritories()">Reintentar</button>
+              </div>
+            }
+
+            <form [formGroup]="registerForm" (ngSubmit)="onSubmit()" novalidate>
+              <div class="row g-3">
+                <!-- 1. Nombre -->
+                <div class="col-12 col-sm-6">
+                  <label for="reg-nombres" class="form-label fw-medium">
+                    Nombre <span class="text-danger" aria-hidden="true">*</span>
+                  </label>
+                  <input
+                    id="reg-nombres"
+                    type="text"
+                    class="form-control"
+                    formControlName="nombres"
+                    placeholder="Ej. Juan Carlos"
+                    autocomplete="given-name"
+                    required
+                    [class.is-invalid]="registerForm.controls.nombres.invalid && registerForm.controls.nombres.touched"
+                    [attr.aria-invalid]="registerForm.controls.nombres.invalid && registerForm.controls.nombres.touched"
+                    [attr.aria-describedby]="registerForm.controls.nombres.invalid && registerForm.controls.nombres.touched ? 'reg-nombres-error' : null"
+                  />
+                  @if (registerForm.controls.nombres.invalid && registerForm.controls.nombres.touched) {
+                    <div id="reg-nombres-error" class="invalid-feedback d-block" role="alert">
+                      El nombre debe tener entre 2 y 80 caracteres.
+                    </div>
+                  }
+                </div>
+
+                <!-- 2. Apellido -->
+                <div class="col-12 col-sm-6">
+                  <label for="reg-apellidos" class="form-label fw-medium">
+                    Apellido <span class="text-danger" aria-hidden="true">*</span>
+                  </label>
+                  <input
+                    id="reg-apellidos"
+                    type="text"
+                    class="form-control"
+                    formControlName="apellidos"
+                    placeholder="Ej. Perez Quispe"
+                    autocomplete="family-name"
+                    required
+                    [class.is-invalid]="registerForm.controls.apellidos.invalid && registerForm.controls.apellidos.touched"
+                    [attr.aria-invalid]="registerForm.controls.apellidos.invalid && registerForm.controls.apellidos.touched"
+                    [attr.aria-describedby]="registerForm.controls.apellidos.invalid && registerForm.controls.apellidos.touched ? 'reg-apellidos-error' : null"
+                  />
+                  @if (registerForm.controls.apellidos.invalid && registerForm.controls.apellidos.touched) {
+                    <div id="reg-apellidos-error" class="invalid-feedback d-block" role="alert">
+                      El apellido debe tener entre 2 y 80 caracteres.
+                    </div>
+                  }
+                </div>
+
+                <!-- 3. Número de teléfono -->
+                <div class="col-12 col-sm-6">
+                  <label for="reg-telefono" class="form-label fw-medium">
+                    Número de teléfono <span class="text-danger" aria-hidden="true">*</span>
+                  </label>
+                  <input
+                    id="reg-telefono"
+                    type="tel"
+                    class="form-control"
+                    formControlName="telefono"
+                    placeholder="Ej. 964123456"
+                    autocomplete="tel"
+                    required
+                    [class.is-invalid]="registerForm.controls.telefono.invalid && registerForm.controls.telefono.touched"
+                    [attr.aria-invalid]="registerForm.controls.telefono.invalid && registerForm.controls.telefono.touched"
+                    [attr.aria-describedby]="registerForm.controls.telefono.invalid && registerForm.controls.telefono.touched ? 'reg-telefono-error' : null"
+                  />
+                  @if (registerForm.controls.telefono.invalid && registerForm.controls.telefono.touched) {
+                    <div id="reg-telefono-error" class="invalid-feedback d-block" role="alert">
+                      Ingresa un teléfono válido (ej. 964123456).
+                    </div>
+                  }
+                </div>
+
+                <!-- 4. Dirección -->
+                <div class="col-12 col-sm-6">
+                  <label for="reg-direccion" class="form-label fw-medium">
+                    Dirección <span class="text-danger" aria-hidden="true">*</span>
+                  </label>
+                  <input
+                    id="reg-direccion"
+                    type="text"
+                    class="form-control"
+                    formControlName="direccion"
+                    placeholder="Ej. Av. Real 450"
+                    autocomplete="street-address"
+                    required
+                    [class.is-invalid]="registerForm.controls.direccion.invalid && registerForm.controls.direccion.touched"
+                    [attr.aria-invalid]="registerForm.controls.direccion.invalid && registerForm.controls.direccion.touched"
+                    [attr.aria-describedby]="registerForm.controls.direccion.invalid && registerForm.controls.direccion.touched ? 'reg-direccion-error' : null"
+                  />
+                  @if (registerForm.controls.direccion.invalid && registerForm.controls.direccion.touched) {
+                    <div id="reg-direccion-error" class="invalid-feedback d-block" role="alert">
+                      La dirección debe tener entre 5 y 200 caracteres.
+                    </div>
+                  }
+                </div>
+
+                <!-- 5. Departamento -->
+                <div class="col-12 col-md-4">
+                  <label for="reg-departamento" class="form-label fw-medium">
+                    Departamento <span class="text-danger" aria-hidden="true">*</span>
+                  </label>
+                  <div class="select-wrapper" [class.has-selection]="!!registerForm.controls.id_departamento.value" [class.is-disabled]="loadingTerritories() || !!territoriesError()">
+                    <span class="select-leading" aria-hidden="true"><app-icon name="locate" /></span>
+                    <select
+                      id="reg-departamento"
+                      class="form-select"
+                      [value]="selectedDepartamentoId() ?? ''"
+                      (change)="onDepartamentoChange($any($event.target).value)"
+                      required
+                      [disabled]="loadingTerritories() || !!territoriesError()"
+                      [class.is-invalid]="registerForm.controls.id_departamento.invalid && registerForm.controls.id_departamento.touched"
+                      [attr.aria-invalid]="registerForm.controls.id_departamento.invalid && registerForm.controls.id_departamento.touched"
+                      [attr.aria-describedby]="registerForm.controls.id_departamento.invalid && registerForm.controls.id_departamento.touched ? 'reg-depto-error' : null"
+                    >
+                      <option value="" disabled selected>-- Selecciona --</option>
+                      @for (dep of availableDepartamentos(); track dep.id_departamento) {
+                        <option [value]="dep.id_departamento">{{ dep.nombre_departamento }}</option>
+                      }
+                    </select>
+                    <app-icon name="chevron-down" class="select-chevron" aria-hidden="true" />
+                  </div>
+                  @if (registerForm.controls.id_departamento.invalid && registerForm.controls.id_departamento.touched) {
+                    <div id="reg-depto-error" class="invalid-feedback d-block" role="alert">
+                      Selecciona un departamento.
+                    </div>
+                  }
+                </div>
+
+                <!-- 6. Provincia -->
+                <div class="col-12 col-md-4">
+                  <label for="reg-provincia" class="form-label fw-medium">
+                    Provincia <span class="text-danger" aria-hidden="true">*</span>
+                  </label>
+                  <div class="select-wrapper" [class.has-selection]="!!registerForm.controls.id_provincia.value" [class.is-disabled]="!selectedDepartamentoId()">
+                    <span class="select-leading" aria-hidden="true"><app-icon name="building" /></span>
+                    <select
+                      id="reg-provincia"
+                      class="form-select"
+                      [value]="selectedProvinciaId() ?? ''"
+                      [disabled]="!selectedDepartamentoId()"
+                      (change)="onProvinciaChange($any($event.target).value)"
+                      required
+                      [class.is-invalid]="registerForm.controls.id_provincia.invalid && registerForm.controls.id_provincia.touched"
+                      [attr.aria-invalid]="registerForm.controls.id_provincia.invalid && registerForm.controls.id_provincia.touched"
+                      [attr.aria-describedby]="registerForm.controls.id_provincia.invalid && registerForm.controls.id_provincia.touched ? 'reg-prov-error' : null"
+                    >
+                      <option value="" disabled selected>
+                        {{ selectedDepartamentoId() ? '-- Selecciona --' : 'Elija departamento' }}
+                      </option>
+                      @for (prov of availableProvincias(); track prov.id_provincia) {
+                        <option [value]="prov.id_provincia">{{ prov.nombre_provincia }}</option>
+                      }
+                    </select>
+                    <app-icon name="chevron-down" class="select-chevron" aria-hidden="true" />
+                  </div>
+                  @if (registerForm.controls.id_provincia.invalid && registerForm.controls.id_provincia.touched) {
+                    <div id="reg-prov-error" class="invalid-feedback d-block" role="alert">
+                      Selecciona una provincia.
+                    </div>
+                  }
+                </div>
+
+                <!-- 7. Distrito -->
+                <div class="col-12 col-md-4">
+                  <label for="reg-distrito" class="form-label fw-medium">
+                    Distrito <span class="text-danger" aria-hidden="true">*</span>
+                  </label>
+                  <div class="select-wrapper" [class.has-selection]="!!registerForm.controls.id_distrito.value" [class.is-disabled]="!selectedProvinciaId()">
+                    <span class="select-leading" aria-hidden="true"><app-icon name="map-pin" /></span>
+                    <select
+                      id="reg-distrito"
+                      class="form-select"
+                      [value]="registerForm.controls.id_distrito.value ?? ''"
+                      [disabled]="!selectedProvinciaId()"
+                      (change)="onDistritoChange($any($event.target).value)"
+                      required
+                      [class.is-invalid]="registerForm.controls.id_distrito.invalid && registerForm.controls.id_distrito.touched"
+                      [attr.aria-invalid]="registerForm.controls.id_distrito.invalid && registerForm.controls.id_distrito.touched"
+                      [attr.aria-describedby]="registerForm.controls.id_distrito.invalid && registerForm.controls.id_distrito.touched ? 'reg-dist-error' : null"
+                    >
+                      <option value="" disabled selected>
+                        {{ selectedProvinciaId() ? '-- Selecciona --' : 'Elija provincia' }}
+                      </option>
+                      @for (dist of availableDistritos(); track dist.id_distrito) {
+                        <option [value]="dist.id_distrito">{{ dist.nombre_distrito }}</option>
+                      }
+                    </select>
+                    <app-icon name="chevron-down" class="select-chevron" aria-hidden="true" />
+                  </div>
+                  @if (registerForm.controls.id_distrito.invalid && registerForm.controls.id_distrito.touched) {
+                    <div id="reg-dist-error" class="invalid-feedback d-block" role="alert">
+                      Selecciona un distrito.
+                    </div>
+                  }
+                </div>
+
+                <!-- 8. Usuario -->
+                <div class="col-12 col-sm-6">
+                  <label for="reg-usuario" class="form-label fw-medium">
+                    Usuario <span class="text-danger" aria-hidden="true">*</span>
+                  </label>
+                  <input
+                    id="reg-usuario"
+                    type="text"
+                    class="form-control"
+                    formControlName="nombre_usuario"
+                    placeholder="Ej. mgarcia"
+                    autocomplete="username"
+                    required
+                    [class.is-invalid]="registerForm.controls.nombre_usuario.invalid && registerForm.controls.nombre_usuario.touched"
+                    [attr.aria-invalid]="registerForm.controls.nombre_usuario.invalid && registerForm.controls.nombre_usuario.touched"
+                    [attr.aria-describedby]="registerForm.controls.nombre_usuario.invalid && registerForm.controls.nombre_usuario.touched ? 'reg-usuario-error' : null"
+                  />
+                  @if (registerForm.controls.nombre_usuario.invalid && registerForm.controls.nombre_usuario.touched) {
+                    <div id="reg-usuario-error" class="invalid-feedback d-block" role="alert">
+                      @if (registerForm.controls.nombre_usuario.hasError('required')) {
+                        El usuario es obligatorio.
+                      } @else {
+                        Usa entre 3 y 40 letras ASCII, números, guiones o puntos.
+                      }
+                    </div>
+                  }
+                </div>
+
+                <!-- 9. Contraseña -->
+                <div class="col-12 col-sm-6">
+                  <label for="reg-contrasena" class="form-label fw-medium">
+                    Contraseña <span class="text-danger" aria-hidden="true">*</span>
+                  </label>
+                  <input
+                    id="reg-contrasena"
+                    type="password"
+                    class="form-control"
+                    formControlName="contrasena"
+                    placeholder="Entre 8 y 128 caracteres"
+                    autocomplete="new-password"
+                    required
+                    [class.is-invalid]="registerForm.controls.contrasena.invalid && registerForm.controls.contrasena.touched"
+                    [attr.aria-invalid]="registerForm.controls.contrasena.invalid && registerForm.controls.contrasena.touched"
+                    [attr.aria-describedby]="registerForm.controls.contrasena.invalid && registerForm.controls.contrasena.touched ? 'reg-contrasena-error' : null"
+                  />
+                  @if (registerForm.controls.contrasena.invalid && registerForm.controls.contrasena.touched) {
+                    <div id="reg-contrasena-error" class="invalid-feedback d-block" role="alert">
+                      Usa entre 8 y 128 caracteres; la contraseña no puede contener solo espacios.
+                    </div>
+                  }
+                </div>
+              </div>
+
+              <div class="d-grid mt-4 mb-3">
+                <button
+                  type="submit"
+                  class="button button-primary w-100"
+                  [disabled]="isSubmitting() || loadingTerritories() || !!successMessage()"
+                  [attr.aria-busy]="isSubmitting()"
+                >
+                  @if (isSubmitting()) {
+                    <span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+                    <span>Creando tu cuenta...</span>
+                  } @else {
+                    <span>Registrar cuenta</span>
+                    <app-icon name="arrow-right" />
+                  }
+                </button>
+              </div>
+
+              <div class="text-center pt-2 border-top">
+                <p class="small text-body-secondary mb-0">
+                  ¿Ya tienes una cuenta registrada?
+                  <a [routerLink]="['/login']" [queryParams]="returnUrl ? { returnUrl } : null" class="fw-semibold text-decoration-underline ms-1">
+                    Inicia sesión aquí
+                  </a>
+                </p>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

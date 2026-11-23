@@ -1,0 +1,179 @@
+/* Prefix every rule: the component uses ViewEncapsulation.None. */
+app-location-picker { display: block; min-width: 0; }
+
+app-location-picker .picker-label {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  margin: 0 0 10px;
+  color: var(--ink, #e0e3ee);
+  font-size: 13px;
+  line-height: 1.5;
+  letter-spacing: .02em;
+}
+
+app-location-picker .picker-label app-icon,
+app-location-picker .picker-label span { color: var(--accent, #8bd4ff); }
+
+app-location-picker .search-row {
+  display: flex;
+  gap: 10px;
+  align-items: stretch;
+  width: 100%;
+}
+
+app-location-picker .search-row .combobox {
+  flex: 1 1 280px;
+  min-width: 0;
+}
+
+app-location-picker .geolocation-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-height: var(--control-height, 52px);
+  padding: 0 16px;
+  border: 1px solid var(--control-border, #2c3647);
+  border-radius: var(--control-radius, 9px);
+  background-color: var(--control-bg, #101722);
+  color: var(--accent, #8bd4ff);
+  font: inherit;
+  font-size: 13px;
+  font-weight: 500;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: border-color .18s ease, background-color .18s ease, box-shadow .18s ease;
+}
+
+app-location-picker .geolocation-btn:hover:not(:disabled) {
+  border-color: var(--accent, #8bd4ff);
+  background-color: var(--control-hover, #172232);
+}
+
+app-location-picker .geolocation-btn:focus-visible {
+  outline: 2px solid var(--accent, #8bd4ff);
+  outline-offset: 2px;
+}
+
+app-location-picker .geolocation-btn:disabled {
+  opacity: .5;
+  cursor: not-allowed;
+}
+
+app-location-picker .combobox { position: relative; width: 100%; min-width: 0; }
+
+app-location-picker .location-input {
+  display: block;
+  width: 100%;
+  min-height: var(--control-height, 52px);
+  box-sizing: border-box;
+  padding: 12px 16px;
+  border: 1px solid var(--control-border, #2c3647);
+  border-radius: var(--control-radius, 9px);
+  background-color: var(--control-bg, #101722);
+  color: var(--ink, #e0e3ee);
+  color-scheme: dark;
+  caret-color: var(--accent, #8bd4ff);
+  font-family: 'DM Sans', 'Segoe UI', sans-serif;
+  font-size: 14px;
+  line-height: 1.5;
+  transition: border-color .18s ease, background-color .18s ease, box-shadow .18s ease;
+}
+
+app-location-picker .location-input::placeholder { color: var(--muted, #a9b3c0); opacity: .8; }
+app-location-picker .location-input:hover:not(:disabled) { border-color: #536779; background-color: var(--control-hover, #172232); }
+app-location-picker .location-input:focus { outline: none; border-color: var(--accent, #8bd4ff); box-shadow: var(--control-ring, 0 0 0 3px #8bd4ff14); }
+app-location-picker .location-input:disabled { cursor: not-allowed; opacity: .6; }
+
+app-location-picker .suggestions {
+  position: absolute;
+  z-index: 20;
+  top: calc(100% + 6px);
+  left: 0;
+  right: 0;
+  max-height: 320px;
+  overflow-y: auto;
+  margin: 0;
+  padding: 6px 0;
+  list-style: none;
+  border: 1px solid #344355;
+  border-radius: 10px;
+  background: #121c29;
+  box-shadow: 0 14px 32px #02060c66;
+}
+
+app-location-picker .suggestions[hidden] { display: none; }
+
+app-location-picker .suggestion {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  min-height: 48px;
+  padding: 10px 16px;
+  color: var(--muted, #a9b3c0);
+  font-size: 13px;
+  line-height: 1.5;
+  cursor: pointer;
+}
+
+app-location-picker .suggestion app-icon { flex: 0 0 14px; margin-top: 3px; color: var(--accent, #8bd4ff); }
+app-location-picker .suggestion span { display: grid; min-width: 0; }
+app-location-picker .suggestion strong { color: var(--ink, #e0e3ee); font-weight: 500; overflow-wrap: anywhere; }
+app-location-picker .suggestion small { font-size: 12px; overflow-wrap: anywhere; }
+app-location-picker .suggestion:hover,
+app-location-picker .suggestion.active { background-color: #203348; }
+app-location-picker .suggestion.active { box-shadow: inset 3px 0 0 var(--accent, #8bd4ff); }
+
+app-location-picker .picker-status-text { margin: 8px 0 0; color: var(--muted, #a9b3c0); font-size: 11px; line-height: 1.6; }
+app-location-picker .picker-status-text:empty { display: none; }
+app-location-picker .verification-note { color: var(--muted, #a9b3c0); font-size: 11px; line-height: 1.6; }
+
+app-location-picker .picker-hint { margin: 10px 0 0; color: var(--muted, #a9b3c0); font-size: 11px; line-height: 1.7; }
+
+
+app-location-picker .change-location {
+  min-height: 36px;
+  padding: 8px 12px;
+  border: 1px solid #3c5368;
+  border-radius: 7px;
+  background: #172a3b;
+  color: var(--accent, #8bd4ff);
+  font: inherit;
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 1.4;
+  cursor: pointer;
+  transition: border-color .18s ease, background-color .18s ease, box-shadow .18s ease;
+}
+
+app-location-picker .change-location:hover:not(:disabled) { border-color: var(--accent, #8bd4ff); background: #1c354a; }
+app-location-picker .change-location:focus-visible { outline: 2px solid var(--accent, #8bd4ff); outline-offset: 3px; }
+app-location-picker .change-location:disabled { opacity: .5; cursor: not-allowed; }
+
+app-location-picker .picker-error { display: flex; align-items: flex-start; gap: 8px; margin: 10px 0 0; color: #ffc0ae; font-size: 12px; line-height: 1.7; }
+app-location-picker .picker-error app-icon { margin-top: 3px; flex: 0 0 14px; }
+
+app-location-picker .verified-location {
+  display: grid;
+  gap: 10px;
+  padding: 18px;
+  border: 1px solid #315650;
+  border-radius: 10px;
+  background: linear-gradient(120deg, #14272b, #131e29);
+}
+
+app-location-picker .verified-heading { display: flex; align-items: center; gap: 8px; color: #a0e2ce; font-size: 12px; line-height: 1.5; }
+app-location-picker .verified-heading strong { font-weight: 500; }
+app-location-picker .verified-location p { margin: 0; color: var(--ink, #e0e3ee); font-size: 14px; line-height: 1.6; overflow-wrap: anywhere; }
+app-location-picker .coordinates { color: #9cbab8; font-size: 11px; line-height: 1.5; letter-spacing: .03em; font-variant-numeric: tabular-nums; }
+app-location-picker .change-location { justify-self: start; margin-top: 2px; }
+app-location-picker .location-preview { --map-height: 230px; margin-top: 14px; }
+
+@media (max-width: 600px) {
+  app-location-picker .search-row { flex-direction: column; }
+  app-location-picker .geolocation-btn { width: 100%; min-height: 48px; }
+  app-location-picker .location-input { font-size: 16px; }
+  app-location-picker .verified-location { padding: 16px; }
+  app-location-picker .change-location { min-height: 44px; }
+}

@@ -1,0 +1,513 @@
+[
+  {
+    "id": "TC001",
+    "title": "Preserve a draft when authentication is required",
+    "description": "A visitor can submit a completed report draft and be sent to sign in while the draft remains available for continuation afterward.",
+    "category": "Preparation and draft preservation of a noise report",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /reportar"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the place search field with a Huancayo location"
+      },
+      {
+        "type": "action",
+        "description": "Select a suggested place"
+      },
+      {
+        "type": "action",
+        "description": "Select a noise source"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the report description field with a brief observation"
+      },
+      {
+        "type": "action",
+        "description": "Submit the report"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the user is redirected to the login page"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the report draft is still available after authentication is required"
+      }
+    ],
+    "priority": "High"
+  },
+  {
+    "id": "TC002",
+    "title": "Inspect a hotspot from the home map",
+    "description": "A visitor can open the home map, select a hotspot, and view its detail popup with hotspot information.",
+    "category": "Exploration of the map and critical noise points",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /"
+      },
+      {
+        "type": "action",
+        "description": "Click a hotspot marker on the map"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify a hotspot details popup is displayed"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify decibel information and a hotspot description are displayed"
+      }
+    ],
+    "priority": "High"
+  },
+  {
+    "id": "TC003",
+    "title": "Prepare a report with place search and microphone level",
+    "description": "A visitor can search for a Huancayo location, select a suggestion, choose a noise source, enter observations, and capture microphone-level information in a report draft.",
+    "category": "Preparation and draft preservation of a noise report",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /reportar"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the place search field with a Huancayo location"
+      },
+      {
+        "type": "action",
+        "description": "Select a suggested place"
+      },
+      {
+        "type": "action",
+        "description": "Select a noise source"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the report description field with a brief observation"
+      },
+      {
+        "type": "action",
+        "description": "Capture or enable the relative microphone level"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the report draft contains the selected place, noise source, description, and microphone level information"
+      }
+    ],
+    "priority": "High"
+  },
+  {
+    "id": "TC004",
+    "title": "Compare hotspot details from the dedicated list",
+    "description": "A visitor can open the hotspot list page, select an entry, and review the associated hotspot details and reference information.",
+    "category": "Exploration of the map and critical noise points",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /puntos-criticos"
+      },
+      {
+        "type": "action",
+        "description": "Click a hotspot entry in the list"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify hotspot details are displayed"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify reference information for the selected hotspot is displayed"
+      }
+    ],
+    "priority": "High"
+  },
+  {
+    "id": "TC005",
+    "title": "Register a citizen with matching Junín territory selections",
+    "description": "A visitor can complete the citizen registration form with valid personal data and a consistent Junín department, province, and district selection.",
+    "category": "Volunteer citizen registration",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /registro"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the names field with a first name"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the surnames field with a last name"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the phone number field with a valid phone number"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the address field with a valid address"
+      },
+      {
+        "type": "action",
+        "description": "Select the Junín department"
+      },
+      {
+        "type": "action",
+        "description": "Select a province within Junín"
+      },
+      {
+        "type": "action",
+        "description": "Select a district within the selected province"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the username field with a new username"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the password field with a valid password"
+      },
+      {
+        "type": "action",
+        "description": "Complete the registration"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the account is created successfully"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the authenticated session state is shown in the interface"
+      }
+    ],
+    "priority": "High"
+  },
+  {
+    "id": "TC006",
+    "title": "Reject mismatched territorial selections during registration",
+    "description": "A visitor sees validation feedback and stays on the registration form when the chosen department, province, and district do not match.",
+    "category": "Volunteer citizen registration",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /registro"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the names field with a first name"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the surnames field with a last name"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the phone number field with a valid phone number"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the address field with a valid address"
+      },
+      {
+        "type": "action",
+        "description": "Select the Junín department"
+      },
+      {
+        "type": "action",
+        "description": "Select a province within Junín"
+      },
+      {
+        "type": "action",
+        "description": "Select a district from a different territory"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the username field with a new username"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the password field with a valid password"
+      },
+      {
+        "type": "action",
+        "description": "Complete the registration"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify a territorial validation error is displayed"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the registration form remains available"
+      }
+    ],
+    "priority": "Medium"
+  },
+  {
+    "id": "TC007",
+    "title": "Read the privacy policy",
+    "description": "A visitor can review how report data, account data, microphone access, and map usage are handled on the privacy page.",
+    "category": "Privacy and terms review",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /privacidad"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify privacy policy content is displayed"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify microphone access and map data usage are described"
+      }
+    ],
+    "priority": "Medium"
+  },
+  {
+    "id": "TC008",
+    "title": "Read the service terms",
+    "description": "A visitor can review the service usage conditions on the terms page.",
+    "category": "Privacy and terms review",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /condiciones"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify terms content is displayed"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify service usage conditions are described"
+      }
+    ],
+    "priority": "Medium"
+  },
+  {
+    "id": "TC009",
+    "title": "Review privacy information",
+    "description": "A visitor can open the privacy page and review how microphone access and report data are handled.",
+    "category": "Review of privacy and terms",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /privacidad"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify privacy information is displayed"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify microphone permission and report data handling information are displayed"
+      }
+    ],
+    "priority": "Low"
+  },
+  {
+    "id": "TC010",
+    "title": "Review the service conditions",
+    "description": "A visitor can open the conditions page and review the usage terms for the service and map data.",
+    "category": "Review of privacy and terms",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /condiciones"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify terms of use information is displayed"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify map data or service usage terms are displayed"
+      }
+    ],
+    "priority": "Low"
+  },
+  {
+    "id": "TC011",
+    "title": "Sign in with valid credentials and verify authenticated profile in navbar",
+    "description": "A registered citizen can sign in from /login, be redirected out of /login, and see their authenticated username and account popover with a logout button.",
+    "category": "Login and logout with HttpOnly session cookies",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /login"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the username field with valid user credentials"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the password field with the matching valid password"
+      },
+      {
+        "type": "action",
+        "description": "Submit the login form by clicking Iniciar sesión"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the user is redirected away from /login and the authenticated username pill is visible in the navigation bar"
+      },
+      {
+        "type": "action",
+        "description": "Open the profile menu button in the header"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the active session details and Cerrar sesión button are displayed in the profile popover"
+      }
+    ],
+    "priority": "High"
+  },
+  {
+    "id": "TC012",
+    "title": "Reject invalid login credentials with Spanish error feedback",
+    "description": "Submitting invalid credentials on /login displays a Spanish authentication error message and keeps the visitor unauthenticated on /login.",
+    "category": "Login and logout with HttpOnly session cookies",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /login"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the username field with a username and the password field with an incorrect password"
+      },
+      {
+        "type": "action",
+        "description": "Submit the login form by clicking Iniciar sesión"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify a Spanish error alert is displayed on /login"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the user remains on /login and Ingresar and Registro links remain visible"
+      }
+    ],
+    "priority": "High"
+  },
+  {
+    "id": "TC013",
+    "title": "Sign out from an active session and revoke authentication state",
+    "description": "An authenticated user can open the profile popover and click Cerrar sesión to revoke the session cookie and return to the unauthenticated header state.",
+    "category": "Login and logout with HttpOnly session cookies",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /login"
+      },
+      {
+        "type": "action",
+        "description": "Sign in with valid credentials"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the authenticated username pill is displayed in the header"
+      },
+      {
+        "type": "action",
+        "description": "Click the profile menu button in the header to open the account popover"
+      },
+      {
+        "type": "action",
+        "description": "Click Cerrar sesión"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the authenticated username pill disappears and the Ingresar and Registro links are shown again"
+      }
+    ],
+    "priority": "High"
+  },
+  {
+    "id": "TC014",
+    "title": "Preserve report draft across /reportar -> /login -> /registro -> /reportar and submit authenticated report",
+    "description": "Submitting a report draft without a session redirects to /login, preserves the draft when continuing to /registro to create a new citizen account, restores all draft fields on /reportar, and submits the report successfully.",
+    "category": "Preparation and draft preservation of a noise report",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /reportar"
+      },
+      {
+        "type": "action",
+        "description": "Search for a Huancayo location and select a suggested place"
+      },
+      {
+        "type": "action",
+        "description": "Select a noise source, enable the optional noise level toggle and set a dBA value, and enter a valid description of at least 10 characters"
+      },
+      {
+        "type": "action",
+        "description": "Click Enviar reporte while unauthenticated"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify redirection to /login with the preserved draft notice visible"
+      },
+      {
+        "type": "action",
+        "description": "Click Regístrate aquí to navigate to /registro"
+      },
+      {
+        "type": "action",
+        "description": "Complete the registration form with valid personal fields, matching Junín department, province, and district, and a unique username and password, then submit"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify redirection back to /reportar with the selected place, noise source, decibel value, and description restored"
+      },
+      {
+        "type": "action",
+        "description": "Click Enviar reporte now that the user is authenticated"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the report submission succeeds and displays the Reporte recibido confirmation receipt with a report code"
+      }
+    ],
+    "priority": "High"
+  },
+  {
+    "id": "TC015",
+    "title": "Validate required fields and short description on /reportar before submission",
+    "description": "The report form disables submission until a place suggestion is selected and displays field validation feedback when source or description requirements are not met.",
+    "category": "Preparation and draft preservation of a noise report",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /reportar"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the Enviar reporte button is disabled and the location selection hint is displayed before picking a place"
+      },
+      {
+        "type": "action",
+        "description": "Search for a Huancayo location and select a suggested place"
+      },
+      {
+        "type": "action",
+        "description": "Leave the noise source unselected, enter a description shorter than 10 characters, and click Enviar reporte"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify field validation messages and the validation summary alert are displayed without submitting the form"
+      }
+    ],
+    "priority": "High"
+  }
+]

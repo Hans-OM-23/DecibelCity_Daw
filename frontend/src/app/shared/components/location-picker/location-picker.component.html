@@ -1,0 +1,73 @@
+<section class="location-picker" aria-label="Elegir ubicación verificada">
+  <label class="picker-label" for="location-search"><app-icon name="map-pin" /> Ubicación del problema <span aria-hidden="true">*</span></label>
+  @if (!selected()) {
+    <div class="search-row">
+      <div class="combobox">
+        <input
+          #searchInput
+          id="location-search"
+          class="location-input"
+          type="text"
+          role="combobox"
+          autocomplete="off"
+          spellcheck="false"
+          aria-autocomplete="list"
+          aria-controls="location-options"
+          aria-describedby="location-picker-hint location-picker-status"
+          placeholder="Busca una calle, plaza o lugar en Huancayo"
+          [attr.aria-expanded]="expanded()"
+          [attr.aria-activedescendant]="activeId()"
+          [value]="query()"
+          [disabled]="disabled() || geolocating()"
+          (input)="onInput($event)"
+          (keydown)="onKeydown($event)"
+          (focus)="reopen()"
+          (blur)="close()"
+        >
+        <ul id="location-options" class="suggestions" role="listbox" aria-label="Sugerencias de lugares" [hidden]="!expanded()">
+          @for (suggestion of suggestions(); track suggestion.place_id; let index = $index) {
+            <li
+              [id]="'location-option-' + index"
+              class="suggestion"
+              role="option"
+              [class.active]="index === activeIndex()"
+              [attr.aria-selected]="index === activeIndex()"
+              (mousedown)="$event.preventDefault()"
+              (click)="choose(suggestion)"
+            >
+              <app-icon name="map-pin" />
+              <span><strong>{{ suggestion.name }}</strong>@if (suggestion.address) { <small>{{ suggestion.address }}</small> }</span>
+            </li>
+          }
+        </ul>
+      </div>
+      <button
+        type="button"
+        class="geolocation-btn"
+        (click)="useCurrentLocation()"
+        [disabled]="disabled() || geolocating()"
+        [attr.aria-busy]="geolocating()"
+        aria-label="Usar mi ubicación actual"
+        title="Usar mi ubicación actual"
+      >
+        <app-icon [name]="geolocating() ? 'activity' : 'locate'" />
+        <span>{{ geolocating() ? 'Detectando…' : 'Usar mi ubicación actual' }}</span>
+      </button>
+    </div>
+    <p id="location-picker-status" class="picker-status-text" role="status" aria-live="polite">{{ statusMessage() }}</p>
+    @if (state() === 'error') {
+      <p class="picker-error" role="alert"><app-icon name="info" /> {{ error() }}</p>
+    }
+    <p id="location-picker-hint" class="picker-hint">Escribe al menos 3 letras o usa tu ubicación actual para elegir una sugerencia de OpenStreetMap. Una dirección escrita sin seleccionar no confirma la ubicación.</p>
+  } @else {
+    @let place = selected()!;
+    <div class="verified-location" role="status">
+      <div class="verified-heading"><app-icon name="check" /><strong>Ubicación seleccionada</strong></div>
+      <p>{{ place.address }}</p>
+      <span class="coordinates">{{ place.position.lat.toFixed(6) }}, {{ place.position.lng.toFixed(6) }}</span>
+      <span class="verification-note">Al enviar, el servidor confirmará este lugar con OpenStreetMap.</span>
+      <button type="button" class="change-location" (click)="changeLocation()" [disabled]="disabled()">Cambiar ubicación</button>
+    </div>
+    <div class="location-preview"><app-map [points]="mapPoints()" [selectedId]="place.placeId" /></div>
+  }
+</section>

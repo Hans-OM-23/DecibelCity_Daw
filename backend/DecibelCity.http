@@ -1,0 +1,86 @@
+@baseUrl = http://127.0.0.1:8000
+@frontend = http://localhost:4200
+
+### Estado del servicio
+GET {{baseUrl}}/api/health
+
+### Configuración pública del mapa
+GET {{baseUrl}}/api/maps/config
+
+### Puntos críticos ilustrativos
+GET {{baseUrl}}/api/hotspots
+
+### Fuentes de ruido
+GET {{baseUrl}}/api/noise-sources
+
+### Catálogo territorial (Junín, jerarquía activa)
+GET {{baseUrl}}/api/territories
+
+### Búsqueda de lugares (Photon)
+GET {{baseUrl}}/api/places/search?q=Plaza%20Constituci%C3%B3n
+
+### Búsqueda demasiado corta (422)
+GET {{baseUrl}}/api/places/search?q=ab
+
+### Geocodificación inversa (Nominatim /reverse)
+GET {{baseUrl}}/api/places/reverse?lat=-12.0686&lng=-75.2103
+
+### Coordenadas fuera de Huancayo (422)
+GET {{baseUrl}}/api/places/reverse?lat=-13&lng=-75.2
+
+### Clima (Open-Meteo, caché de 15 min)
+GET {{baseUrl}}/api/weather
+
+### Configuración de autenticación (Turnstile)
+GET {{baseUrl}}/api/auth/config
+
+### Registro (201 + cookie de sesión)
+POST {{baseUrl}}/api/auth/register
+Content-Type: application/json
+Origin: {{frontend}}
+
+{
+  "nombres": "Ana María",
+  "apellidos": "Quispe Rojas",
+  "telefono": "+51 964 123 456",
+  "direccion": "Jr. Ica 123, Huancayo",
+  "id_departamento": 1,
+  "id_provincia": 1,
+  "id_distrito": 1,
+  "nombre_usuario": "ana.quispe",
+  "contrasena": "Ruido seguro 2026!"
+}
+
+### Inicio de sesión (turnstile_token solo si Turnstile está activo)
+POST {{baseUrl}}/api/auth/login
+Content-Type: application/json
+Origin: {{frontend}}
+
+{
+  "nombre_usuario": "ana.quispe",
+  "contrasena": "Ruido seguro 2026!"
+}
+
+### Sesión vigente
+GET {{baseUrl}}/api/auth/session
+
+### Reporte (exige sesión; verifica el place_id en Nominatim)
+POST {{baseUrl}}/api/reports
+Content-Type: application/json
+Origin: {{frontend}}
+
+{
+  "location": "Plaza de la Constitución",
+  "place_id": "W88269258",
+  "source": "traffic",
+  "description": "Bocinas constantes junto al paradero durante la tarde.",
+  "decibels": 74
+}
+
+### Origen no permitido (403)
+POST {{baseUrl}}/api/auth/logout
+Origin: https://sitio-ajeno.test
+
+### Cierre de sesión (204)
+POST {{baseUrl}}/api/auth/logout
+Origin: {{frontend}}

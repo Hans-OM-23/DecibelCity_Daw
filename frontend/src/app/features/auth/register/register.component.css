@@ -1,0 +1,300 @@
+.auth-section {
+  min-height: calc(100vh - 180px);
+  display: flex;
+  align-items: center;
+}
+
+.auth-card {
+  --control-bg: #101722;
+  --control-border: #2c3647;
+  --control-hover: #172232;
+  --control-radius: 9px;
+  --control-ring: 0 0 0 3px #8bd4ff14;
+  --control-height: 52px;
+  background-color: var(--surface);
+  border-color: var(--border) !important;
+  border-radius: 12px;
+}
+
+.auth-card .form-control {
+  min-height: var(--control-height);
+  padding: 14px 15px;
+  font-size: 13px;
+  line-height: 1.5;
+  background-color: var(--control-bg);
+  border: 1px solid var(--control-border);
+  color: var(--ink);
+  border-radius: var(--control-radius);
+  outline: none;
+  transition: border-color .18s, background-color .18s, box-shadow .18s;
+}
+
+.auth-card .form-control:hover:not(:disabled) {
+  border-color: #43546b;
+}
+
+.auth-card .form-control:focus {
+  background-color: var(--control-hover);
+  border-color: #8bd4ff99;
+  color: #fff;
+  box-shadow: var(--control-ring);
+}
+
+.auth-card .form-control::placeholder {
+  color: #a9b3c0;
+  opacity: 1;
+}
+
+.auth-card .form-control.is-invalid,
+.auth-card .form-control[aria-invalid='true'] {
+  border-color: #e9959580;
+}
+
+.auth-card .form-control.is-invalid:focus {
+  box-shadow: 0 0 0 3px rgba(255, 178, 172, 0.2);
+}
+
+.auth-card .form-control:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* Select wrapper pattern aligned with report-controls.css */
+.select-wrapper {
+  position: relative;
+  border-radius: var(--control-radius);
+}
+
+.select-wrapper select,
+.select-wrapper .form-select {
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  min-height: var(--control-height);
+  padding: 14px 45px 14px 47px;
+  cursor: pointer;
+  color: #9daabd;
+  text-overflow: ellipsis;
+  width: 100%;
+  border: 1px solid var(--control-border);
+  background-color: var(--control-bg);
+  border-radius: var(--control-radius);
+  font-size: 13px;
+  line-height: 1.5;
+  outline: none;
+  background-image: none;
+  transition: border-color .18s, background-color .18s, box-shadow .18s;
+}
+
+.select-wrapper select:hover:not(:disabled),
+.select-wrapper .form-select:hover:not(:disabled) {
+  border-color: #43546b;
+}
+
+.select-wrapper select:focus,
+.select-wrapper .form-select:focus {
+  border-color: #8bd4ff99;
+  background-color: var(--control-hover);
+  box-shadow: var(--control-ring);
+  color: #fff;
+}
+
+.select-wrapper.has-selection select,
+.select-wrapper.has-selection .form-select {
+  color: var(--ink);
+  border-color: #49657b;
+}
+
+.select-leading {
+  display: grid;
+  place-items: center;
+  position: absolute;
+  top: 50%;
+  left: 15px;
+  transform: translateY(-50%);
+  width: 19px;
+  height: 19px;
+  color: #7e96ad;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.select-leading app-icon {
+  width: 18px;
+  height: 18px;
+}
+
+.has-selection .select-leading {
+  color: var(--accent);
+}
+
+.select-wrapper > .select-chevron {
+  pointer-events: none;
+  position: absolute;
+  right: 16px;
+  top: calc(50% - 8px);
+  width: 16px;
+  height: 16px;
+  color: #9bb6cb;
+  transition: transform .18s, color .18s;
+}
+
+.select-wrapper:focus-within .select-leading,
+.select-wrapper:focus-within .select-chevron {
+  color: var(--accent);
+}
+
+.select-wrapper.is-disabled .select-leading,
+.select-wrapper.is-disabled .select-chevron {
+  opacity: .4;
+}
+
+.select-wrapper select:disabled,
+.select-wrapper .form-select:disabled {
+  background-color: #151922;
+  color: #5d6d80;
+  opacity: 0.6;
+  cursor: not-allowed;
+  border-color: #1f2734;
+}
+
+.select-wrapper select.is-invalid,
+.select-wrapper .form-select.is-invalid,
+.select-wrapper select[aria-invalid='true'],
+.select-wrapper .form-select[aria-invalid='true'] {
+  border-color: #e9959580;
+}
+
+.select-wrapper select.is-invalid:focus,
+.select-wrapper .form-select.is-invalid:focus {
+  box-shadow: 0 0 0 3px rgba(255, 178, 172, 0.2);
+}
+
+select option {
+  background: #141d2b;
+  color: var(--ink);
+}
+
+select option:disabled {
+  color: #8190a4;
+}
+
+@supports (appearance: base-select) {
+  .select-wrapper select,
+  .select-wrapper .form-select,
+  .select-wrapper select::picker(select),
+  .select-wrapper .form-select::picker(select) {
+    appearance: base-select;
+  }
+  .select-wrapper select,
+  .select-wrapper .form-select {
+    align-items: center;
+  }
+  .select-wrapper select::picker-icon,
+  .select-wrapper .form-select::picker-icon {
+    display: none;
+  }
+  .select-wrapper select:open,
+  .select-wrapper .form-select:open {
+    border-color: #8bd4ff99;
+    background-color: var(--control-hover);
+    box-shadow: var(--control-ring);
+  }
+  .select-wrapper:has(select:open) .select-chevron,
+  .select-wrapper:has(.form-select:open) .select-chevron {
+    transform: rotate(180deg);
+    color: var(--accent);
+  }
+  .select-wrapper select::picker(select),
+  .select-wrapper .form-select::picker(select) {
+    margin-block: 8px;
+    padding: 6px;
+    border: 1px solid #35475c;
+    border-radius: 12px;
+    background: #141d2b;
+    box-shadow: 0 18px 44px #0008, 0 2px 8px #0003;
+    max-height: min(330px, 55dvh);
+    overflow-y: auto;
+    scrollbar-width: thin;
+    scrollbar-color: #43546b #141d2b;
+  }
+  .select-wrapper select option,
+  .select-wrapper .form-select option {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    min-height: 46px;
+    margin: 2px 0;
+    padding: 12px 14px;
+    border: 1px solid transparent;
+    border-radius: 7px;
+    background: transparent;
+    color: #c7d2e1;
+    font-size: 13px;
+    line-height: 1.45;
+    cursor: pointer;
+    transition: color .15s, background .15s;
+  }
+  .select-wrapper select option:disabled,
+  .select-wrapper .form-select option:disabled {
+    min-height: 35px;
+    padding-block: 8px;
+    color: #798ca3;
+    font-size: 11px;
+    cursor: default;
+  }
+  .select-wrapper select option:not(:disabled):is(:hover, :focus),
+  .select-wrapper .form-select option:not(:disabled):is(:hover, :focus) {
+    background: #24364a;
+    color: #e1f3ff;
+    outline: none;
+  }
+  .select-wrapper select option:checked:not(:disabled),
+  .select-wrapper .form-select option:checked:not(:disabled) {
+    background: #19364b;
+    border-color: #8bd4ff26;
+    color: #a9e0ff;
+  }
+  .select-wrapper select option::checkmark,
+  .select-wrapper .form-select option::checkmark {
+    order: 1;
+    margin-left: auto;
+    color: var(--accent);
+    font-size: 15px;
+  }
+  .select-wrapper select option:disabled::checkmark,
+  .select-wrapper .form-select option:disabled::checkmark {
+    visibility: hidden;
+  }
+}
+
+.auth-card .invalid-feedback {
+  color: #ffb4b4;
+  font-size: 11px;
+  line-height: 1.6;
+  margin-top: 6px;
+}
+
+.alert-danger {
+  background-color: rgba(255, 178, 172, 0.12);
+  border-color: rgba(255, 178, 172, 0.3);
+  color: #ffb2ac;
+}
+
+.alert-success {
+  background-color: rgba(139, 212, 255, 0.12);
+  border-color: rgba(139, 212, 255, 0.3);
+  color: #8bd4ff;
+}
+
+.alert-warning {
+  background-color: rgba(255, 214, 102, 0.12);
+  border-color: rgba(255, 214, 102, 0.3);
+  color: #ffd666;
+}
+
+.alert-info {
+  background-color: rgba(139, 212, 255, 0.1);
+  border-color: rgba(139, 212, 255, 0.25);
+  color: #8bd4ff;
+}

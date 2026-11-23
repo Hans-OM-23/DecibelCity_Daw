@@ -1,0 +1,114 @@
+:host {
+  display: block;
+}
+
+.weather-badge {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 10px 14px;
+  background-color: rgba(16, 23, 34, 0.88);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border: 1px solid var(--border, #252c38);
+  border-radius: 9px;
+  color: var(--ink, #e0e3ee);
+  font-size: 12px;
+  line-height: 1.4;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.25);
+  transition: border-color .18s ease;
+}
+
+.weather-badge:hover {
+  border-color: rgba(139, 212, 255, 0.35);
+}
+
+.weather-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.weather-condition-group {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.weather-icon {
+  color: var(--accent, #8bd4ff);
+  font-size: 16px;
+}
+
+.weather-temp {
+  font-size: 15px;
+  font-weight: 600;
+  color: #fff;
+  letter-spacing: -0.02em;
+}
+
+.weather-condition {
+  color: var(--muted, #a9b3c0);
+  font-weight: 500;
+}
+
+.weather-badge-tag {
+  display: inline-flex;
+  align-items: center;
+  padding: 2px 7px;
+  border-radius: 99px;
+  background-color: rgba(139, 212, 255, 0.12);
+  border: 1px solid rgba(139, 212, 255, 0.25);
+  color: var(--accent, #8bd4ff);
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.weather-metrics {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--muted, #a9b3c0);
+  font-size: 11px;
+  flex-wrap: wrap;
+}
+
+.weather-metrics strong {
+  color: var(--ink, #e0e3ee);
+  font-weight: 500;
+}
+
+.weather-metrics .sep {
+  color: var(--border, #252c38);
+}
+
+.weather-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  padding-top: 4px;
+  border-top: 1px solid rgba(37, 44, 56, 0.6);
+  font-size: 10px;
+  color: var(--muted, #a9b3c0);
+  flex-wrap: wrap;
+}
+
+.weather-footer a {
+  color: var(--accent, #8bd4ff);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.weather-footer a:hover {
+  color: #b8e6ff;
+}
+
+.noise-distinction {
+  font-style: italic;
+  opacity: 0.85;
+}

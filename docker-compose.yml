@@ -1,0 +1,77 @@
+# DecibelCity — entorno local con contenedores: PostgreSQL 18 + API ASP.NET Core 10.
+#
+# Requisitos: un archivo .env en la raíz (excluido de Git) con, como mínimo:
+#   DECIBELCITY_DB_PASSWORD=<contraseña local del rol decibelcitydaw>
+# Opcionales: DECIBELCITY_API_PORT (8000), DECIBELCITY_CORS_ORIGINS, DECIBELCITY_TRUSTED_PROXIES,
+# DECIBELCITY_TURNSTILE_*, DECIBELCITY_TELEGRAM_* (ver backend/.env.example).
+#
+#   docker compose up --build -d
+#   docker compose ps          # ambos servicios deben aparecer como "healthy"
+#
+# La API queda en http://127.0.0.1:8000 (el proxy de Angular, frontend/proxy.conf.json, no cambia).
+# PostgreSQL no se publica en el anfitrión: solo la API lo alcanza por la red interna «datos».
+# Las sesiones viven en memoria de un único proceso: no escalar el servicio api a varias réplicas.
+
+name: decibelcity
+
+services:
+  postgres:
+    image: postgres:18-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: decibelcitydaw
+      POSTGRES_USER: decibelcitydaw
+      POSTGRES_PASSWORD: ${DECIBELCITY_DB_PASSWORD:?Definir DECIBELCITY_DB_PASSWORD en .env}
+      POSTGRES_INITDB_ARGS: --encoding=UTF8 --locale=C.UTF-8
+      TZ: UTC
+    volumes:
+      # PostgreSQL 18 guarda los datos en /var/lib/postgresql/18/docker: se monta el directorio padre.
+      - postgres-data:/var/lib/postgresql
+    networks:
+      - datos
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U decibelcitydaw -d decibelcitydaw"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 20s
+
+  api:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    image: decibelcity-api:local
+    restart: unless-stopped
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      # Sin contraseña en la URL: Npgsql la toma de PGPASSWORD (evita escapar caracteres especiales).
+      DECIBELCITY_DATABASE_URL: postgresql://decibelcitydaw@postgres:5432/decibelcitydaw
+      PGPASSWORD: ${DECIBELCITY_DB_PASSWORD:?Definir DECIBELCITY_DB_PASSWORD en .env}
+      DECIBELCITY_DATABASE_SCHEMA: public
+      DECIBELCITY_DATABASE_INITIALIZE: "true"
+      DECIBELCITY_CORS_ORIGINS: ${DECIBELCITY_CORS_ORIGINS:-http://localhost:4200,http://127.0.0.1:4200}
+      DECIBELCITY_TRUSTED_PROXIES: ${DECIBELCITY_TRUSTED_PROXIES:-}
+      DECIBELCITY_TURNSTILE_ENABLED: ${DECIBELCITY_TURNSTILE_ENABLED:-true}
+      DECIBELCITY_TURNSTILE_SITE_KEY: ${DECIBELCITY_TURNSTILE_SITE_KEY:-}
+      DECIBELCITY_TURNSTILE_SECRET_KEY: ${DECIBELCITY_TURNSTILE_SECRET_KEY:-}
+      DECIBELCITY_TELEGRAM_BOT_TOKEN: ${DECIBELCITY_TELEGRAM_BOT_TOKEN:-}
+      DECIBELCITY_TELEGRAM_CHAT_ID: ${DECIBELCITY_TELEGRAM_CHAT_ID:-}
+    ports:
+      # Solo en el bucle local del anfitrión.
+      - "127.0.0.1:${DECIBELCITY_API_PORT:-8000}:8080"
+    networks:
+      - datos
+      - salida
+    # El HEALTHCHECK (wget a /api/health) viene definido en backend/Dockerfile.
+
+networks:
+  # Red interna sin salida a Internet: solo api ↔ postgres.
+  datos:
+    internal: true
+  # Salida de la API hacia Nominatim, Photon, Open-Meteo, Turnstile y Telegram.
+  salida: {}
+
+volumes:
+  postgres-data:

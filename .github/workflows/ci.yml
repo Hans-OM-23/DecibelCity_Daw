@@ -1,0 +1,79 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  test-backend:
+    name: Backend Test & Build
+    runs-on: ubuntu-latest
+
+    services:
+      postgres:
+        image: postgres:18-alpine
+        env:
+          POSTGRES_DB: decibelcitydaw_test
+          POSTGRES_USER: decibelcitydaw
+          POSTGRES_HOST_AUTH_METHOD: trust
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup .NET SDK
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '10.0.x'
+
+      - name: Restore dependencies
+        run: |
+          dotnet restore backend/DecibelCity.Api.csproj
+          dotnet restore backend.Tests/DecibelCity.Api.Tests.csproj
+
+      - name: Build backend
+        run: dotnet build backend/DecibelCity.Api.csproj -c Release --no-restore
+
+      - name: Run backend tests
+        env:
+          DECIBELCITY_TEST_DATABASE_URL: postgresql://decibelcitydaw@127.0.0.1:5432/decibelcitydaw_test
+        run: dotnet test backend.Tests/DecibelCity.Api.Tests.csproj -c Release
+
+  test-frontend:
+    name: Frontend Test & Build
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: frontend
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: 'npm'
+          cache-dependency-path: frontend/package-lock.json
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Typecheck
+        run: npm run typecheck
+
+      - name: Run unit tests
+        run: npm test
+
+      - name: Build production bundle
+        run: npm run build

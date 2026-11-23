@@ -1,0 +1,28 @@
+<section class="app-map" aria-label="Mapa de ubicaciones en Huancayo">
+  <div class="map-frame" [attr.aria-busy]="state() === 'loading'">
+    <div #canvas class="map-canvas" [class.map-hidden]="state() === 'error'" aria-label="Mapa interactivo de OpenStreetMap"></div>
+    @if (state() === 'loading') {
+      <div class="map-status" role="status"><span class="spinner"></span><p>Cargando el mapa…</p></div>
+    }
+    @if (state() === 'error') {
+      <div class="map-status error-state" role="alert">
+        <app-icon name="map-pin" />
+        <h3>Mapa no disponible</h3>
+        <p>{{ error() }}</p>
+        <button type="button" class="button button-secondary" (click)="retry()">Volver a intentar</button>
+      </div>
+    }
+  </div>
+  @if (state() !== 'error' && points().length) {
+    <div class="map-caption" role="status">
+      <span>{{ shown() }} de {{ points().length }} {{ points().length === 1 ? 'punto ubicado' : 'puntos ubicados' }}</span>
+      <span>Huancayo · Perú · Cartografía de OpenStreetMap</span>
+    </div>
+  }
+  @if (unresolved().length && state() !== 'error') {
+    <div class="unresolved" role="status">
+      <p><app-icon name="info" /> Algunos puntos no se pueden mostrar en el mapa.</p>
+      <ul>@for (point of unresolved(); track point.id) { <li><strong>{{ point.title }}</strong>: {{ point.reason }}</li> }</ul>
+    </div>
+  }
+</section>

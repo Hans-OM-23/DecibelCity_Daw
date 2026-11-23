@@ -1,0 +1,90 @@
+<a class="skip-link" href="#main-content" (click)="skipToContent($event)">Saltar al contenido</a>
+<header class="site-header">
+  <div class="header-inner container">
+    <a routerLink="/" class="brand" aria-label="DecibelCity, inicio" (click)="profileOpen.set(false)">
+      <span class="brand-symbol"><app-icon name="activity" /></span>
+      <span class="brand-copy"><strong>DecibelCity</strong><span>HUANCAYO · 3,259 MSNM</span></span>
+    </a>
+    <nav class="main-nav" aria-label="Navegación principal">
+      <a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}" ariaCurrentWhenActive="page">Inicio</a>
+      <a routerLink="/puntos-criticos" routerLinkActive="active" ariaCurrentWhenActive="page">Puntos críticos</a>
+      <a routerLink="/reportar" routerLinkActive="active" ariaCurrentWhenActive="page">Reportar ruido</a>
+    </nav>
+    <div class="header-actions">
+      <a class="button report-button" routerLink="/reportar" aria-label="Reportar ruido"><app-icon name="megaphone" /> <span>Reportar ruido</span></a>
+
+      @if (!isAuthenticated()) {
+        <a routerLink="/login" class="nav-auth-link" aria-label="Iniciar sesión">Ingresar</a>
+        <a routerLink="/registro" class="nav-auth-link nav-auth-link--register" aria-label="Registrarse">Registro</a>
+      } @else {
+        <div class="user-status-pill d-none d-sm-flex align-items-center gap-2" [title]="'Sesión activa: ' + (currentUser()?.nombres || currentUser()?.nombre_usuario)">
+          <span class="user-status-dot" aria-hidden="true"></span>
+          <span class="user-status-name">{{ currentUser()?.nombre_usuario }}</span>
+        </div>
+      }
+
+      <div class="profile-wrap">
+        <button
+          class="profile-button"
+          type="button"
+          [attr.aria-label]="isAuthenticated() ? 'Menú de usuario (' + currentUser()?.nombre_usuario + ')' : 'Menú de cuenta y acceso'"
+          [attr.aria-expanded]="profileOpen()"
+          aria-controls="participation-info"
+          (click)="toggleProfile()"
+        >
+          <app-icon name="user" />
+        </button>
+
+        @if (profileOpen()) {
+          <div id="participation-info" class="profile-popover" role="region" aria-label="Información de usuario y cuenta">
+            @if (isAuthenticated()) {
+              <div class="profile-user-info">
+                <span class="eyebrow d-block mb-1">SESIÓN ACTIVA · {{ currentUser()?.rol | uppercase }}</span>
+                <strong class="d-block mb-1">{{ currentUser()?.nombres }} {{ currentUser()?.apellidos }}</strong>
+                <p class="mb-1 text-body-secondary small">
+                  <strong>&#64;{{ currentUser()?.nombre_usuario }}</strong>
+                </p>
+                <p class="mb-2 text-body-secondary small">
+                  {{ currentUser()?.nombre_distrito }}, {{ currentUser()?.nombre_provincia }}
+                </p>
+                <div class="d-flex flex-column gap-2 pt-2 border-top">
+                  <a routerLink="/reportar" class="popover-action-link" (click)="profileOpen.set(false)">
+                    <app-icon name="megaphone" /> Reportar ruido
+                  </a>
+                  <button type="button" class="btn btn-sm btn-outline-danger w-100 d-flex align-items-center justify-content-center gap-2 mt-2" [disabled]="logoutPending()" (click)="logout()">
+                    <span>Cerrar sesión</span>
+                  </button>
+                  @if (logoutError()) { <p class="small text-danger" role="alert">{{ logoutError() }}</p> }
+                </div>
+              </div>
+            } @else {
+              <span class="eyebrow">Una ciudad que escucha</span>
+              <strong>Tu voz cuenta.</strong>
+              <p>Puedes consultar el mapa sin una cuenta. Para enviar un reporte debes iniciar sesión; su contenido se guarda sin vincularlo a tu perfil.</p>
+              <div class="d-flex flex-column gap-2 mb-3">
+                <a routerLink="/login" class="button button-primary text-center justify-content-center" (click)="profileOpen.set(false)">
+                  Iniciar sesión
+                </a>
+                <a routerLink="/registro" class="button button-secondary text-center justify-content-center" (click)="profileOpen.set(false)">
+                  Crear cuenta
+                </a>
+              </div>
+              <a routerLink="/reportar" class="small text-decoration-none d-flex align-items-center gap-1" (click)="profileOpen.set(false)">
+                Preparar un reporte <app-icon name="arrow-right" />
+              </a>
+            }
+          </div>
+        }
+      </div>
+    </div>
+  </div>
+</header>
+<main id="main-content" tabindex="-1"><router-outlet /></main>
+<footer class="site-footer">
+  <div class="container footer-inner">
+    <a routerLink="/" class="footer-brand"><app-icon name="activity" /> DecibelCity</a>
+    <p>Escuchar la ciudad es el primer paso para cuidarla.</p>
+    <nav class="footer-links" aria-label="Información del servicio"><a routerLink="/privacidad">Privacidad</a><a routerLink="/condiciones">Condiciones</a></nav>
+    <span><a href="https://commons.wikimedia.org/wiki/File:Calle_Real_cuadra_6_1.jpg" target="_blank" rel="noopener noreferrer" title="Foto: Chalisimo5 · CC BY-SA 4.0">FOTO: CHALISIMO5 · CC BY-SA 4.0</a> <span class="footer-dot">●</span></span>
+  </div>
+</footer>

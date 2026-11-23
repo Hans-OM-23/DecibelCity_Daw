@@ -1,0 +1,39 @@
+<section class="meter" aria-label="Explorador de sonido ambiental">
+  <div class="meter-header">
+    <span class="meter-title"><app-icon name="activity" /> EXPLORA TU ENTORNO</span>
+    <span class="meter-status" [class.is-live]="meter.state() === 'recording'" role="status">{{ meter.status() }}</span>
+  </div>
+
+  <div class="reading" aria-label="Nivel de sonido">
+    <span class="reading-number">{{ meter.level() }}</span><span class="reading-unit">{{ meter.unit() }}</span>
+  </div>
+  <p class="reading-label">{{ meter.isExample() ? 'NIVEL ILUSTRATIVO · DATOS DE EJEMPLO' : 'AMPLITUD RELATIVA DEL MICRÓFONO' }}</p>
+
+  <div class="scale">
+    <div class="scale-track" role="meter" aria-label="Nivel relativo de sonido" [attr.aria-valuemin]="meter.isExample() ? 30 : -96" [attr.aria-valuemax]="meter.isExample() ? 100 : 0" [attr.aria-valuenow]="meter.level()" [attr.aria-valuetext]="meter.level() + ' ' + meter.unit()">
+      <span [style.width.%]="meter.progress()"></span>
+    </div>
+    <div class="scale-labels"><span>{{ meter.isExample() ? '30 dBA' : '−96 dBFS' }}</span><span>{{ meter.isExample() ? 'Referencia visual' : 'Señal digital relativa' }}</span><span>{{ meter.isExample() ? '100 dBA' : '0 dBFS' }}</span></div>
+  </div>
+
+  <p class="meter-explanation">
+    @if (meter.isExample()) {
+      Descubre cómo suena tu entorno con el micrófono.<br>Los valores iniciales son una demostración.
+    } @else {
+      Lectura local en dBFS; depende de tu micrófono.<br>No equivale a dBA ni sustituye un sonómetro calibrado.
+    }
+  </p>
+  <div class="meter-actions">
+    <button type="button" class="button button-primary" (click)="meter.start()" [disabled]="!meter.canStart()"><app-icon name="mic" /> {{ meter.state() === 'starting' ? 'Conectando…' : 'Iniciar medición' }}</button>
+    <button type="button" class="button button-secondary" (click)="meter.stop()" [disabled]="meter.canStart()"><app-icon name="square" /> {{ meter.state() === 'starting' ? 'Cancelar' : 'Detener' }}</button>
+  </div>
+  @if (meter.error()) {
+    <p class="meter-error" role="alert"><app-icon name="info" /> {{ meter.error() }}</p>
+  }
+  <div class="meter-stats">
+    <div><span>Pico {{ meter.isExample() ? 'de ejemplo' : 'registrado' }}</span><strong>{{ meter.peak() }} {{ meter.unit() }}</strong></div>
+    <div><span>{{ meter.isExample() ? 'Promedio de ejemplo' : 'Promedio energético' }}</span><strong>{{ meter.average() }} {{ meter.unit() }}</strong></div>
+    <div><span>Ámbito</span><strong>{{ meter.isExample() ? 'Huancayo Ctro.' : 'Este dispositivo' }}</strong></div>
+  </div>
+  <p class="privacy-note"><app-icon name="shield" /> Tu audio permanece en tu dispositivo.</p>
+</section>
